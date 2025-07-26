@@ -20,6 +20,11 @@
     title: string;
     description: string;
     validUntil: string;
+    discount?: string;
+    promoCode?: string;
+    maxUses: number;
+    currentUses: number;
+    isPublic: boolean;
     createdAt?: any;
   }
 
@@ -27,6 +32,10 @@
     title: string;
     description: string;
     validUntil: string;
+    discount: string;
+    promoCode: string;
+    maxUses: number;
+    isPublic: boolean;
   }
 
   let promos: Promotion[] = [];
@@ -35,17 +44,48 @@
   let showAddForm = false;
   let editingId: string | null = null;
   let searchTerm = '';
-  let filterStatus = 'all'; // all, active, expired
+  let filterStatus = 'all';
 
   // Form data
   let formData: PromoForm = {
     title: '',
     description: '',
-    validUntil: ''
+    validUntil: '',
+    discount: '',
+    promoCode: '',
+    maxUses: 0,
+    isPublic: true
   };
 
   let formErrors: Partial<PromoForm> = {};
   let saving = false;
+
+  const promoTemplates = [
+    {
+      name: 'New Patient Special',
+      title: '20% Off First Visit',
+      description: 'Welcome new patients with a 20% discount on their first consultation and cleaning.',
+      discount: '20%'
+    },
+    {
+      name: 'Cleaning Package',
+      title: 'Family Cleaning Package',
+      description: 'Book cleanings for the whole family and save! 15% off when booking 3+ family members.',
+      discount: '15%'
+    },
+    {
+      name: 'Whitening Special',
+      title: 'Professional Teeth Whitening',
+      description: 'Get a brighter smile with our professional whitening treatment. Limited time offer.',
+      discount: '$100'
+    },
+    {
+      name: 'Checkup Reminder',
+      title: '6-Month Checkup Reminder',
+      description: 'It\'s time for your regular checkup! Book now and receive 10% off your visit.',
+      discount: '10%'
+    }
+  ];
 
   onMount(async () => {
     await loadPromotions();
@@ -82,8 +122,13 @@
           title: data.title || '',
           description: data.description || '',
           validUntil: data.validUntil,
+          discount: data.discount || '',
+          promoCode: data.promoCode || '',
+          maxUses: data.maxUses || 0,
+          currentUses: data.currentUses || 0,
+          isPublic: data.isPublic !== false,
           createdAt: data.createdAt
-        }, ['title', 'description']);
+        }, ['title', 'description', 'promoCode']);
       });
 
       filterPromotions();
@@ -102,7 +147,8 @@
       const search = searchTerm.toLowerCase();
       filtered = filtered.filter(promo => 
         promo.title.toLowerCase().includes(search) ||
-        promo.description.toLowerCase().includes(search)
+        promo.description.toLowerCase().includes(search) ||
+        (promo.promoCode && promo.promoCode.toLowerCase().includes(search))
       );
     }
 
@@ -111,7 +157,13 @@
       const today = getTodayDate();
       filtered = filtered.filter(promo => {
         const isActive = promo.validUntil >= today;
-        return filterStatus === 'active' ? isActive : !isActive;
+        switch (filterStatus) {
+          case 'active': return isActive && promo.isPublic;
+          case 'expired': return !isActive;
+          case 'draft': return !promo.isPublic;
+          case 'limited': return promo.maxUses > 0;
+          default: return true;
+        }
       });
     }
 
@@ -120,12 +172,16 @@
 
   function resetForm() {
     const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
+    tomorrow.setDate(tomorrow.getDate() + 7); // Default to 1 week from now
     
     formData = {
       title: '',
       description: '',
-      validUntil: tomorrow.toISOString().split('T')[0]
+      validUntil: tomorrow.toISOString().split('T')[0],
+      discount: '',
+      promoCode: '',
+      maxUses: 0,
+      isPublic: true
     };
     formErrors = {};
     editingId = null;
@@ -148,6 +204,10 @@
       formErrors.validUntil = 'Valid until date must be in the future';
     }
 
+    if (formData.maxUses < 0) {
+      formErrors.maxUses = 'Max uses cannot be negative';
+    }
+
     return Object.keys(formErrors).length === 0;
   }
 
@@ -161,11 +221,15 @@
       const sanitizedData = {
         title: sanitizeInput(formData.title),
         description: sanitizeInput(formData.description),
-        validUntil: formData.validUntil
+        validUntil: formData.validUntil,
+        discount: sanitizeInput(formData.discount),
+        promoCode: sanitizeInput(formData.promoCode.toUpperCase()),
+        maxUses: formData.maxUses,
+        isPublic: formData.isPublic
       };
 
       // Encrypt sensitive fields
-      const encryptedData = encryptFields(sanitizedData, ['title', 'description']);
+      const encryptedData = encryptFields(sanitizedData, ['title', 'description', 'promoCode']);
 
       if (editingId) {
         // Update existing promotion
@@ -175,6 +239,7 @@
         // Create new promotion
         const promoData = {
           ...encryptedData,
+          currentUses: 0,
           createdAt: Timestamp.now()
         };
         await addDoc(collection(db, 'promos'), promoData);
@@ -194,7 +259,11 @@
     formData = {
       title: promo.title,
       description: promo.description,
-      validUntil: promo.validUntil
+      validUntil: promo.validUntil,
+      discount: promo.discount || '',
+      promoCode: promo.promoCode || '',
+      maxUses: promo.maxUses,
+      isPublic: promo.isPublic
     };
     editingId = promo.id;
     showAddForm = true;
@@ -225,12 +294,58 @@
     return validUntil >= getTodayDate();
   }
 
+  function getPromoStatus(promo: Promotion): { text: string; color: string } {
+    if (!promo.isPublic) {
+      return { text: 'Draft', color: 'status-neutral' };
+    }
+    if (!isPromoActive(promo.validUntil)) {
+      return { text: 'Expired', color: 'status-error' };
+    }
+    if (promo.maxUses > 0 && promo.currentUses >= promo.maxUses) {
+      return { text: 'Limit Reached', color: 'status-warning' };
+    }
+    return { text: 'Active', color: 'status-active' };
+  }
+
   function getActivePromosCount(): number {
-    return promos.filter(promo => isPromoActive(promo.validUntil)).length;
+    return promos.filter(promo => isPromoActive(promo.validUntil) && promo.isPublic).length;
   }
 
   function getExpiredPromosCount(): number {
     return promos.filter(promo => !isPromoActive(promo.validUntil)).length;
+  }
+
+  function getDraftPromosCount(): number {
+    return promos.filter(promo => !promo.isPublic).length;
+  }
+
+  function applyTemplate(template: typeof promoTemplates[0]) {
+    formData.title = template.title;
+    formData.description = template.description;
+    formData.discount = template.discount;
+    
+    // Generate a promo code based on the title
+    const words = template.title.split(' ');
+    const code = words.map((word: string) => word.charAt(0)).join('').toUpperCase() + Math.floor(Math.random() * 100);
+    formData.promoCode = code;
+  }
+
+  function generatePromoCode() {
+    const words = formData.title.split(' ');
+    const code = words.map((word: string) => word.charAt(0)).join('').toUpperCase() + Math.floor(Math.random() * 1000);
+    formData.promoCode = code;
+  }
+
+  async function togglePromoStatus(promo: Promotion) {
+    if (!db) return;
+
+    try {
+      const promoRef = doc(db, 'promos', promo.id);
+      await updateDoc(promoRef, { isPublic: !promo.isPublic });
+      await loadPromotions();
+    } catch (error) {
+      console.error('Error updating promotion status:', error);
+    }
   }
 </script>
 
@@ -239,308 +354,565 @@
 </svelte:head>
 
 <!-- Page Header -->
-<div class="mb-8">
-  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+<div class="mb-6 sm:mb-8">
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
     <div>
-      <h1 class="text-3xl font-bold text-gray-900 mb-2">Promotions</h1>
-      <p class="text-gray-600">Manage special offers and announcements</p>
+      <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-2 flex items-center gap-2">
+        <span class="text-2xl">🎉</span>
+        <span>Promotions</span>
+      </h1>
+      <p class="text-gray-600">Manage special offers and marketing campaigns</p>
     </div>
     <button
       on:click={showAddPromoForm}
-      class="mt-4 sm:mt-0 bg-primary-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-primary-700 transition-colors inline-flex items-center space-x-2"
+      class="btn-primary btn-lg mt-4 sm:mt-0"
     >
       <span>🎉</span>
-      <span>Add Promotion</span>
+      <span>Create Promotion</span>
     </button>
   </div>
+
+  <!-- Stats Cards -->
+  <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+    <div class="card p-4 border-l-4 border-primary-500">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm font-medium text-primary-700">Total</p>
+          <p class="text-2xl font-bold text-primary-900">{promos.length}</p>
+        </div>
+        <div class="text-primary-600 text-2xl">🎉</div>
+      </div>
+    </div>
+
+    <div class="card p-4 border-l-4 border-success-500">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm font-medium text-success-700">Active</p>
+          <p class="text-2xl font-bold text-success-900">{getActivePromosCount()}</p>
+        </div>
+        <div class="text-success-600 text-2xl">✅</div>
+      </div>
+    </div>
+
+    <div class="card p-4 border-l-4 border-warning-500">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm font-medium text-warning-700">Drafts</p>
+          <p class="text-2xl font-bold text-warning-900">{getDraftPromosCount()}</p>
+        </div>
+        <div class="text-warning-600 text-2xl">📝</div>
+      </div>
+    </div>
+
+    <div class="card p-4 border-l-4 border-gray-500">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm font-medium text-gray-700">Expired</p>
+          <p class="text-2xl font-bold text-gray-900">{getExpiredPromosCount()}</p>
+        </div>
+        <div class="text-gray-400 text-2xl">⏰</div>
+      </div>
+    </div>
+  </div>
 </div>
 
-<!-- Stats Cards -->
-<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-  <div class="bg-white rounded-xl shadow-card p-6 border border-gray-100">
-    <div class="flex items-center justify-between">
-      <div>
-        <p class="text-sm font-medium text-gray-600">Total Promotions</p>
-        <p class="text-3xl font-bold text-gray-900">{promos.length}</p>
-      </div>
-      <div class="text-primary-600 text-3xl">🎉</div>
-    </div>
-  </div>
-
-  <div class="bg-green-50 border border-green-200 rounded-xl p-6">
-    <div class="flex items-center justify-between">
-      <div>
-        <p class="text-sm font-medium text-green-800">Active Promotions</p>
-        <p class="text-3xl font-bold text-green-900">{getActivePromosCount()}</p>
-      </div>
-      <div class="text-green-600 text-3xl">✅</div>
-    </div>
-  </div>
-
-  <div class="bg-gray-50 border border-gray-200 rounded-xl p-6">
-    <div class="flex items-center justify-between">
-      <div>
-        <p class="text-sm font-medium text-gray-600">Expired</p>
-        <p class="text-3xl font-bold text-gray-700">{getExpiredPromosCount()}</p>
-      </div>
-      <div class="text-gray-400 text-3xl">⏰</div>
-    </div>
-  </div>
-</div>
-
-<!-- Filters -->
-<div class="bg-white rounded-xl shadow-card border border-gray-100 p-6 mb-8">
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-    <!-- Filter Status -->
-    <div>
-      <label for="filter-status" class="block text-sm font-medium text-gray-700 mb-2">
-        Filter by Status
-      </label>
-      <select
-        id="filter-status"
-        bind:value={filterStatus}
-        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+<!-- Enhanced Filters -->
+<div class="card p-4 sm:p-6 mb-6 sm:mb-8">
+  <div class="flex flex-col lg:flex-row gap-4">
+    <!-- Quick Filter Buttons -->
+    <div class="flex flex-wrap gap-2">
+      <button 
+        on:click={() => filterStatus = 'all'}
+        class="{filterStatus === 'all' ? 'btn-primary' : 'btn-ghost'} btn-sm"
       >
-        <option value="all">All Promotions</option>
-        <option value="active">Active Only</option>
-        <option value="expired">Expired Only</option>
-      </select>
+        All ({promos.length})
+      </button>
+      <button 
+        on:click={() => filterStatus = 'active'}
+        class="{filterStatus === 'active' ? 'btn-success' : 'btn-ghost'} btn-sm"
+      >
+        Active ({getActivePromosCount()})
+      </button>
+      <button 
+        on:click={() => filterStatus = 'draft'}
+        class="{filterStatus === 'draft' ? 'btn-warning' : 'btn-ghost'} btn-sm"
+      >
+        Drafts ({getDraftPromosCount()})
+      </button>
+      <button 
+        on:click={() => filterStatus = 'expired'}
+        class="{filterStatus === 'expired' ? 'btn-secondary' : 'btn-ghost'} btn-sm"
+      >
+        Expired ({getExpiredPromosCount()})
+      </button>
     </div>
-
+    
     <!-- Search -->
-    <div>
-      <label for="search" class="block text-sm font-medium text-gray-700 mb-2">
+    <div class="flex-1">
+      <label for="search" class="block text-sm font-medium text-gray-700 mb-1">
         Search Promotions
       </label>
       <input
         id="search"
         type="text"
-        placeholder="Search by title or description..."
+        placeholder="Title, description, promo code..."
         bind:value={searchTerm}
-        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
       />
     </div>
   </div>
 
   <div class="mt-4 flex items-center justify-between">
     <p class="text-sm text-gray-600">
-      Showing {filteredPromos.length} promotion{filteredPromos.length !== 1 ? 's' : ''}
+      Showing {filteredPromos.length} of {promos.length} promotions
     </p>
     <button
       on:click={() => { filterStatus = 'all'; searchTerm = ''; }}
-      class="text-primary-600 hover:text-primary-700 text-sm font-medium"
+      class="btn-ghost btn-sm"
     >
       Clear Filters
     </button>
   </div>
 </div>
 
-<!-- Add/Edit Form Modal -->
+<!-- Enhanced Add/Edit Form Modal -->
 {#if showAddForm}
-  <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-    <div class="bg-white rounded-xl shadow-xl max-w-2xl w-full max-h-screen overflow-y-auto">
-      <div class="px-6 py-4 border-b border-gray-200">
-        <h2 class="text-xl font-semibold text-gray-900">
-          {editingId ? 'Edit Promotion' : 'Add New Promotion'}
-        </h2>
+  <div class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+    <div class="bg-white rounded-2xl shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+      <div class="sticky top-0 bg-white px-6 py-4 border-b border-gray-200 rounded-t-2xl">
+        <div class="flex items-center justify-between">
+          <h2 class="text-xl font-semibold text-gray-900 flex items-center gap-2">
+            <span>{editingId ? '✏️' : '🎉'}</span>
+            <span>{editingId ? 'Edit Promotion' : 'Create New Promotion'}</span>
+          </h2>
+          <button 
+            on:click={cancelForm} 
+            class="btn-ghost p-2" 
+            disabled={saving}
+            aria-label="Close form"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
       </div>
 
-      <form on:submit|preventDefault={savePromotion} class="p-6 space-y-6">
-        
-        <!-- Title -->
-        <div>
-          <label for="promo-title" class="block text-sm font-medium text-gray-700 mb-2">
-            Title *
-          </label>
-          <input
-            id="promo-title"
-            type="text"
-            bind:value={formData.title}
-            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 {formErrors.title ? 'border-red-500' : ''}"
-            placeholder="e.g., 20% Off Teeth Whitening"
-            required
-          />
-          {#if formErrors.title}
-            <p class="mt-1 text-sm text-red-600">{formErrors.title}</p>
-          {/if}
-        </div>
-
-        <!-- Description -->
-        <div>
-          <label for="promo-description" class="block text-sm font-medium text-gray-700 mb-2">
-            Description *
-          </label>
-          <textarea
-            id="promo-description"
-            bind:value={formData.description}
-            rows="4"
-            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 {formErrors.description ? 'border-red-500' : ''}"
-            placeholder="Describe the promotion details, terms, and how to claim it..."
-            required
-          ></textarea>
-          {#if formErrors.description}
-            <p class="mt-1 text-sm text-red-600">{formErrors.description}</p>
-          {/if}
-        </div>
-
-        <!-- Valid Until -->
-        <div>
-          <label for="valid-until" class="block text-sm font-medium text-gray-700 mb-2">
-            Valid Until *
-          </label>
-          <input
-            id="valid-until"
-            type="date"
-            bind:value={formData.validUntil}
-            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 {formErrors.validUntil ? 'border-red-500' : ''}"
-            required
-          />
-          {#if formErrors.validUntil}
-            <p class="mt-1 text-sm text-red-600">{formErrors.validUntil}</p>
-          {/if}
-        </div>
-
-        <!-- Preview -->
-        {#if formData.title || formData.description}
-          <div class="bg-gray-50 rounded-lg p-4">
-            <h4 class="font-medium text-gray-900 mb-2">Preview</h4>
-            <div class="bg-white rounded-lg p-4 border border-gray-200">
-              {#if formData.title}
-                <h5 class="text-lg font-semibold text-gray-900 mb-2">{formData.title}</h5>
-              {/if}
-              {#if formData.description}
-                <p class="text-gray-600 mb-2">{formData.description}</p>
-              {/if}
-              {#if formData.validUntil}
-                <p class="text-xs text-accent-700 bg-accent-100 px-2 py-1 rounded-full inline-block">
-                  Valid until {formatDisplayDate(formData.validUntil)}
-                </p>
-              {/if}
+      <div class="p-6">
+        <!-- Templates Section (only for new promotions) -->
+        {#if !editingId}
+          <div class="mb-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-3">Quick Start Templates</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+              {#each promoTemplates as template}
+                <button
+                  type="button"
+                  on:click={() => applyTemplate(template)}
+                  class="text-left p-3 border border-gray-200 rounded-lg hover:border-primary-300 hover:bg-primary-50 transition-colors"
+                >
+                  <div class="font-medium text-gray-900">{template.name}</div>
+                  <div class="text-sm text-gray-600 mt-1">{template.title}</div>
+                  <div class="text-xs text-primary-600 mt-1">{template.discount} off</div>
+                </button>
+              {/each}
             </div>
           </div>
         {/if}
 
-        <!-- Form Actions -->
-        <div class="flex justify-end space-x-4 pt-4 border-t border-gray-200">
-          <button
-            type="button"
-            on:click={cancelForm}
-            class="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
-            disabled={saving}
-          >
-            Cancel
-          </button>
-          <button
-            type="submit"
-            disabled={saving}
-            class="px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
-          >
-            {#if saving}
-              <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-              <span>Saving...</span>
-            {:else}
-              <span>{editingId ? 'Update' : 'Save'} Promotion</span>
+        <form on:submit|preventDefault={savePromotion} class="space-y-6">
+          
+          <!-- Title and Discount -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="md:col-span-2">
+              <label for="promo-title" class="block text-sm font-medium text-gray-700 mb-2">
+                Promotion Title *
+              </label>
+              <input
+                id="promo-title"
+                type="text"
+                bind:value={formData.title}
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 {formErrors.title ? 'form-error' : ''}"
+                placeholder="e.g., 20% Off First Visit"
+                required
+              />
+              {#if formErrors.title}
+                <p class="error-message">{formErrors.title}</p>
+              {/if}
+            </div>
+
+            <div>
+              <label for="discount" class="block text-sm font-medium text-gray-700 mb-2">
+                Discount Value
+              </label>
+              <input
+                id="discount"
+                type="text"
+                bind:value={formData.discount}
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                placeholder="e.g., 20%, $50"
+              />
+            </div>
+          </div>
+
+          <!-- Description -->
+          <div>
+            <label for="promo-description" class="block text-sm font-medium text-gray-700 mb-2">
+              Description *
+            </label>
+            <textarea
+              id="promo-description"
+              bind:value={formData.description}
+              rows="4"
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 resize-none {formErrors.description ? 'form-error' : ''}"
+              placeholder="Describe the promotion details, terms, and how customers can claim it..."
+              required
+            ></textarea>
+            {#if formErrors.description}
+              <p class="error-message">{formErrors.description}</p>
             {/if}
-          </button>
-        </div>
-      </form>
+          </div>
+
+          <!-- Promo Code and Dates -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <label for="promo-code" class="block text-sm font-medium text-gray-700 mb-2">
+                Promo Code
+              </label>
+              <div class="flex gap-2">
+                <input
+                  id="promo-code"
+                  type="text"
+                  bind:value={formData.promoCode}
+                  class="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 uppercase"
+                  placeholder="SAVE20"
+                />
+                <button
+                  type="button"
+                  on:click={generatePromoCode}
+                  class="btn-secondary"
+                  title="Generate code"
+                  aria-label="Generate promo code"
+                >
+                  🎲
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <label for="max-uses" class="block text-sm font-medium text-gray-700 mb-2">
+                Max Uses
+              </label>
+              <input
+                id="max-uses"
+                type="number"
+                min="0"
+                bind:value={formData.maxUses}
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 {formErrors.maxUses ? 'form-error' : ''}"
+                placeholder="0 = unlimited"
+              />
+              {#if formErrors.maxUses}
+                <p class="error-message">{formErrors.maxUses}</p>
+              {/if}
+            </div>
+
+            <div>
+              <label for="valid-until" class="block text-sm font-medium text-gray-700 mb-2">
+                Valid Until *
+              </label>
+              <input
+                id="valid-until"
+                type="date"
+                bind:value={formData.validUntil}
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 {formErrors.validUntil ? 'form-error' : ''}"
+                required
+              />
+              {#if formErrors.validUntil}
+                <p class="error-message">{formErrors.validUntil}</p>
+              {/if}
+            </div>
+          </div>
+
+          <!-- Status Toggle -->
+          <div class="flex items-center space-x-3">
+            <input
+              id="is-public"
+              type="checkbox"
+              bind:checked={formData.isPublic}
+              class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+            />
+            <label for="is-public" class="text-sm font-medium text-gray-700">
+              Make this promotion public (visible on website)
+            </label>
+          </div>
+
+          <!-- Live Preview -->
+          {#if formData.title || formData.description}
+            <div class="bg-gray-50 rounded-lg p-4">
+              <h4 class="font-medium text-gray-900 mb-2 flex items-center gap-2">
+                <span>👁️</span>
+                <span>Preview</span>
+              </h4>
+              <div class="bg-white rounded-lg p-4 border border-gray-200">
+                {#if formData.title}
+                  <div class="flex items-start justify-between mb-2">
+                    <h5 class="text-lg font-semibold text-gray-900">{formData.title}</h5>
+                    {#if formData.discount}
+                      <span class="status-active">{formData.discount} OFF</span>
+                    {/if}
+                  </div>
+                {/if}
+                {#if formData.description}
+                  <p class="text-gray-600 mb-3">{formData.description}</p>
+                {/if}
+                <div class="flex items-center justify-between text-sm">
+                  {#if formData.promoCode}
+                    <span class="bg-gray-100 px-2 py-1 rounded font-mono text-primary-600">
+                      Code: {formData.promoCode}
+                    </span>
+                  {/if}
+                  {#if formData.validUntil}
+                    <span class="text-gray-500">
+                      Valid until {formatDisplayDate(formData.validUntil)}
+                    </span>
+                  {/if}
+                </div>
+              </div>
+            </div>
+          {/if}
+
+          <!-- Form Actions -->
+          <div class="flex flex-col sm:flex-row justify-end gap-3 pt-4 border-t border-gray-200">
+            <button type="button" on:click={cancelForm} class="btn-secondary" disabled={saving}>
+              Cancel
+            </button>
+            <button type="submit" disabled={saving} class="btn-primary">
+              {#if saving}
+                <div class="loading-spinner"></div>
+                <span>Saving...</span>
+              {:else}
+                <span>{editingId ? '💾' : '🎉'}</span>
+                <span>{editingId ? 'Update' : 'Create'} Promotion</span>
+              {/if}
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 {/if}
 
-<!-- Promotions List -->
+<!-- Enhanced Promotions List -->
 {#if loading}
   <div class="flex justify-center items-center py-16">
-    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
+    <div class="text-center">
+      <div class="loading-spinner h-12 w-12 text-primary-600 mx-auto mb-4"></div>
+      <p class="text-gray-600">Loading promotions...</p>
+    </div>
   </div>
 {:else if filteredPromos.length > 0}
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+  <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
     {#each filteredPromos as promo}
-      {@const isActive = isPromoActive(promo.validUntil)}
-      <div class="bg-white rounded-xl shadow-card border border-gray-100 p-6 {!isActive ? 'opacity-75' : ''}">
+      {@const status = getPromoStatus(promo)}
+      <div class="card p-6 hover:shadow-card-hover transition-all duration-300">
         
         <!-- Header -->
         <div class="flex items-start justify-between mb-4">
-          <h3 class="text-lg font-semibold text-gray-900 flex-1 pr-2">{promo.title}</h3>
-          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {isActive ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-600'}">
-            {isActive ? '✅ Active' : '⏰ Expired'}
-          </span>
+          <div class="flex-1">
+            <h3 class="text-lg font-semibold text-gray-900 mb-1">{promo.title}</h3>
+            {#if promo.discount}
+              <div class="text-primary-600 font-bold text-sm">{promo.discount} OFF</div>
+            {/if}
+          </div>
+          <div class="flex items-center gap-2 ml-4">
+            <span class="{status.color} px-2 py-1 rounded-full text-xs font-medium">
+              {status.text}
+            </span>
+          </div>
         </div>
 
         <!-- Description -->
-        <p class="text-gray-600 mb-4 line-clamp-3">{promo.description}</p>
+        <p class="text-gray-600 mb-4 line-clamp-3 text-sm leading-relaxed">{promo.description}</p>
 
-        <!-- Valid Until -->
-        <div class="mb-4">
-          <p class="text-sm text-gray-500">Valid until:</p>
-          <p class="font-medium {isActive ? 'text-gray-900' : 'text-red-600'}">
-            {formatDisplayDate(promo.validUntil)}
-          </p>
+        <!-- Details Grid -->
+        <div class="grid grid-cols-2 gap-4 mb-4 text-sm">
+          <div>
+            <p class="text-gray-500">Valid Until</p>
+            <p class="font-medium text-gray-900">{formatDisplayDate(promo.validUntil)}</p>
+          </div>
+          <div>
+            <p class="text-gray-500">Usage</p>
+            <p class="font-medium text-gray-900">
+              {#if promo.maxUses > 0}
+                {promo.currentUses} / {promo.maxUses}
+              {:else}
+                {promo.currentUses} (unlimited)
+              {/if}
+            </p>
+          </div>
         </div>
 
+        <!-- Promo Code -->
+        {#if promo.promoCode}
+          <div class="mb-4">
+            <p class="text-gray-500 text-xs mb-1">Promo Code</p>
+            <div class="bg-gray-100 px-3 py-2 rounded-lg font-mono text-sm text-primary-600 border border-dashed border-primary-300">
+              {promo.promoCode}
+            </div>
+          </div>
+        {/if}
+
         <!-- Actions -->
-        <div class="flex justify-between items-center pt-4 border-t border-gray-200">
-          <div class="flex space-x-2">
+        <div class="flex items-center justify-between pt-4 border-t border-gray-200">
+          <div class="flex items-center gap-2">
             <button
               on:click={() => editPromotion(promo)}
-              class="text-primary-600 hover:text-primary-700 font-medium text-sm"
+              class="btn-ghost btn-sm"
+              title="Edit promotion"
             >
-              Edit
+              ✏️ Edit
             </button>
             <button
               on:click={() => deletePromotion(promo.id)}
-              class="text-red-600 hover:text-red-700 font-medium text-sm"
+              class="btn-ghost btn-sm text-error-600 hover:text-error-700"
+              title="Delete promotion"
             >
-              Delete
+              🗑️ Delete
             </button>
           </div>
           
-          {#if isActive}
-            <div class="text-xs text-green-600 font-medium">
-              📢 Public
-            </div>
-          {:else}
-            <div class="text-xs text-gray-500">
-              🔒 Hidden
-            </div>
-          {/if}
+          <div class="flex items-center gap-2">
+            <button
+              on:click={() => togglePromoStatus(promo)}
+              class="{promo.isPublic ? 'btn-warning' : 'btn-success'} btn-sm"
+              title="{promo.isPublic ? 'Make private' : 'Make public'}"
+            >
+              {promo.isPublic ? '👁️ Public' : '👁️‍🗨️ Draft'}
+            </button>
+          </div>
         </div>
       </div>
     {/each}
   </div>
 {:else}
-  <!-- Empty State -->
-  <div class="bg-white rounded-xl shadow-card border border-gray-100 p-12 text-center">
-    <div class="text-gray-400 text-6xl mb-4">🎉</div>
-    <h3 class="text-lg font-medium text-gray-900 mb-2">
+  <!-- Enhanced Empty State -->
+  <div class="card p-8 sm:p-12 text-center">
+    <div class="text-gray-400 text-5xl sm:text-6xl mb-4">🎉</div>
+    <h3 class="text-xl font-semibold text-gray-900 mb-2">
       {searchTerm || filterStatus !== 'all' ? 'No promotions found' : 'No promotions created'}
     </h3>
-    <p class="text-gray-500 mb-6">
+    <p class="text-gray-500 mb-6 max-w-md mx-auto">
       {searchTerm || filterStatus !== 'all' 
-        ? 'Try adjusting your filters or search terms' 
-        : 'Create your first promotion to attract new patients and reward existing ones'}
+        ? 'Try adjusting your filters or search terms to find what you\'re looking for.' 
+        : 'Create your first promotion to attract new patients and reward existing ones with special offers.'}
     </p>
-    <button
-      on:click={showAddPromoForm}
-      class="bg-primary-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-primary-700 transition-colors"
-    >
-      Create First Promotion
-    </button>
+    <div class="flex flex-col sm:flex-row gap-3 justify-center">
+      <button on:click={showAddPromoForm} class="btn-primary">
+        <span>🎉</span>
+        <span>Create First Promotion</span>
+      </button>
+      {#if searchTerm || filterStatus !== 'all'}
+        <button
+          on:click={() => { filterStatus = 'all'; searchTerm = ''; }}
+          class="btn-secondary"
+        >
+          Clear All Filters
+        </button>
+      {/if}
+    </div>
   </div>
 {/if}
 
-<!-- Information Card -->
-<div class="mt-8 bg-blue-50 border border-blue-200 rounded-xl p-6">
-  <div class="flex items-start space-x-3">
-    <div class="text-blue-600 text-2xl">💡</div>
-    <div>
-      <h4 class="font-semibold text-blue-900 mb-2">How Promotions Work</h4>
-      <ul class="text-blue-800 text-sm space-y-1">
-        <li>• Active promotions automatically appear on your public website</li>
-        <li>• Expired promotions are hidden from public view but remain in your records</li>
-        <li>• All promotion content is encrypted for security</li>
-        <li>• Customers can book appointments directly through Facebook Messenger</li>
-      </ul>
+<!-- Information Panel -->
+<div class="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
+  
+  <!-- Marketing Tips -->
+  <div class="card p-6">
+    <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+      <span class="text-xl">💡</span>
+      <span>Promotion Best Practices</span>
+    </h3>
+    <ul class="space-y-3 text-sm text-gray-600">
+      <li class="flex items-start gap-2">
+        <span class="text-success-500 font-bold">✓</span>
+        <span>Create urgency with limited-time offers and countdown dates</span>
+      </li>
+      <li class="flex items-start gap-2">
+        <span class="text-success-500 font-bold">✓</span>
+        <span>Use clear, benefit-focused headlines that highlight the value</span>
+      </li>
+      <li class="flex items-start gap-2">
+        <span class="text-success-500 font-bold">✓</span>
+        <span>Include specific terms and conditions to avoid confusion</span>
+      </li>
+      <li class="flex items-start gap-2">
+        <span class="text-success-500 font-bold">✓</span>
+        <span>Track usage with promo codes to measure campaign success</span>
+      </li>
+      <li class="flex items-start gap-2">
+        <span class="text-success-500 font-bold">✓</span>
+        <span>Test different discount amounts to find what converts best</span>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Quick Stats -->
+  <div class="card p-6">
+    <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+      <span class="text-xl">📊</span>
+      <span>Promotion Performance</span>
+    </h3>
+    <div class="space-y-4">
+      <div class="flex items-center justify-between p-3 bg-success-50 rounded-lg">
+        <div>
+          <p class="text-sm font-medium text-success-700">Active Promotions</p>
+          <p class="text-lg font-bold text-success-900">{getActivePromosCount()}</p>
+        </div>
+        <div class="text-success-600 text-2xl">🎯</div>
+      </div>
+
+      <div class="flex items-center justify-between p-3 bg-primary-50 rounded-lg">
+        <div>
+          <p class="text-sm font-medium text-primary-700">Total Reach</p>
+          <p class="text-lg font-bold text-primary-900">
+            {promos.reduce((sum, promo) => sum + promo.currentUses, 0)} uses
+          </p>
+        </div>
+        <div class="text-primary-600 text-2xl">📈</div>
+      </div>
+
+      <div class="flex items-center justify-between p-3 bg-warning-50 rounded-lg">
+        <div>
+          <p class="text-sm font-medium text-warning-700">Draft Promotions</p>
+          <p class="text-lg font-bold text-warning-900">{getDraftPromosCount()}</p>
+        </div>
+        <div class="text-warning-600 text-2xl">📝</div>
+      </div>
     </div>
   </div>
 </div>
+
+<!-- Promotion Guidelines -->
+<div class="mt-6 card p-6">
+  <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+    <span class="text-xl">ℹ️</span>
+    <span>How Promotions Work</span>
+  </h3>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm text-gray-600">
+    <div>
+      <h4 class="font-semibold text-gray-800 mb-2">Visibility</h4>
+      <ul class="space-y-1">
+        <li>• <strong>Public</strong> promotions appear on your website automatically</li>
+        <li>• <strong>Draft</strong> promotions are hidden until you make them public</li>
+        <li>• Expired promotions are automatically hidden from public view</li>
+      </ul>
+    </div>
+    <div>
+      <h4 class="font-semibold text-gray-800 mb-2">Usage Tracking</h4>
+      <ul class="space-y-1">
+        <li>• Set max uses to limit promotion availability</li>
+        <li>• Track redemptions with unique promo codes</li>
+        <li>• Monitor performance to optimize future campaigns</li>
+      </ul>
+    </div>
+  </div>
+</div>}

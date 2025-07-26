@@ -43,6 +43,7 @@
   let editingId: string | null = null;
   let searchTerm = '';
   let selectedDate = getTodayDate();
+  let selectedStatus = 'all';
 
   // Form data
   let formData: AppointmentForm = {
@@ -76,7 +77,15 @@
     'Tooth Extraction',
     'Teeth Whitening',
     'Dental Implant',
-    'Emergency Visit'
+    'Emergency Visit',
+    'Consultation'
+  ];
+
+  const timeSlots = [
+    '08:00', '08:30', '09:00', '09:30', '10:00', '10:30',
+    '11:00', '11:30', '12:00', '12:30', '13:00', '13:30',
+    '14:00', '14:30', '15:00', '15:30', '16:00', '16:30',
+    '17:00', '17:30'
   ];
 
   onMount(async () => {
@@ -92,7 +101,7 @@
     debouncedSearch();
   }
 
-  $: if (selectedDate) {
+  $: if (selectedDate || selectedStatus) {
     filterAppointments();
   }
 
@@ -134,7 +143,15 @@
 
     // Filter by date
     if (selectedDate) {
-      filtered = filtered.filter(apt => apt.date === selectedDate);
+      if (selectedStatus === 'today') {
+        filtered = filtered.filter(apt => apt.date === getTodayDate());
+      } else if (selectedStatus === 'upcoming') {
+        filtered = filtered.filter(apt => apt.date > getTodayDate());
+      } else if (selectedStatus === 'past') {
+        filtered = filtered.filter(apt => apt.date < getTodayDate());
+      } else {
+        filtered = filtered.filter(apt => apt.date === selectedDate);
+      }
     }
 
     // Filter by search term
@@ -142,7 +159,8 @@
       const search = searchTerm.toLowerCase();
       filtered = filtered.filter(apt => 
         apt.patientName.toLowerCase().includes(search) ||
-        apt.procedure.toLowerCase().includes(search)
+        apt.procedure.toLowerCase().includes(search) ||
+        (apt.notes && apt.notes.toLowerCase().includes(search))
       );
     }
 
@@ -259,82 +277,185 @@
     showAddForm = false;
     resetForm();
   }
+
+  function getAppointmentStatus(date: string): string {
+    const today = getTodayDate();
+    if (date === today) return 'today';
+    if (date > today) return 'upcoming';
+    return 'past';
+  }
+
+  function getStatusColor(status: string): string {
+    switch (status) {
+      case 'today': return 'status-warning';
+      case 'upcoming': return 'status-active';
+      case 'past': return 'status-neutral';
+      default: return 'status-neutral';
+    }
+  }
+
+  function getStatusText(status: string): string {
+    switch (status) {
+      case 'today': return 'Today';
+      case 'upcoming': return 'Upcoming';
+      case 'past': return 'Past';
+      default: return '';
+    }
+  }
+
+  function getTodayCount(): number {
+    return appointments.filter(apt => apt.date === getTodayDate()).length;
+  }
+
+  function getUpcomingCount(): number {
+    return appointments.filter(apt => apt.date > getTodayDate()).length;
+  }
 </script>
 
 <svelte:head>
   <title>Appointments - Aurora Dentica Admin</title>
 </svelte:head>
 
-<!-- Page Header -->
-<div class="mb-8">
-  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+<!-- Page Header with Stats -->
+<div class="mb-6 sm:mb-8">
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
     <div>
-      <h1 class="text-3xl font-bold text-gray-900 mb-2">Appointments</h1>
+      <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-2 flex items-center gap-2">
+        <span class="text-2xl">📅</span>
+        <span>Appointments</span>
+      </h1>
       <p class="text-gray-600">Manage patient appointments and schedules</p>
     </div>
     <button
       on:click={showAddAppointmentForm}
-      class="mt-4 sm:mt-0 bg-primary-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-primary-700 transition-colors inline-flex items-center space-x-2"
+      class="btn-primary btn-lg mt-4 sm:mt-0"
     >
       <span>➕</span>
-      <span>Add Appointment</span>
+      <span>New Appointment</span>
     </button>
+  </div>
+
+  <!-- Quick Stats -->
+  <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+    <div class="card p-4">
+      <div class="text-center">
+        <div class="text-2xl font-bold text-warning-600">{getTodayCount()}</div>
+        <div class="text-sm text-gray-600">Today</div>
+      </div>
+    </div>
+    <div class="card p-4">
+      <div class="text-center">
+        <div class="text-2xl font-bold text-primary-600">{getUpcomingCount()}</div>
+        <div class="text-sm text-gray-600">Upcoming</div>
+      </div>
+    </div>
+    <div class="card p-4">
+      <div class="text-center">
+        <div class="text-2xl font-bold text-gray-600">{appointments.length}</div>
+        <div class="text-sm text-gray-600">Total</div>
+      </div>
+    </div>
+    <div class="card p-4">
+      <div class="text-center">
+        <div class="text-2xl font-bold text-accent-600">{filteredAppointments.length}</div>
+        <div class="text-sm text-gray-600">Filtered</div>
+      </div>
+    </div>
   </div>
 </div>
 
-<!-- Filters -->
-<div class="bg-white rounded-xl shadow-card border border-gray-100 p-6 mb-8">
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-    <!-- Date Filter -->
-    <div>
-      <label for="date-filter" class="block text-sm font-medium text-gray-700 mb-2">
-        Filter by Date
-      </label>
-      <input
-        id="date-filter"
-        type="date"
-        bind:value={selectedDate}
-        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
-      />
+<!-- Enhanced Filters -->
+<div class="card p-4 sm:p-6 mb-6 sm:mb-8">
+  <div class="flex flex-col lg:flex-row gap-4">
+    <!-- Quick Filter Buttons -->
+    <div class="flex flex-wrap gap-2">
+      <button 
+        on:click={() => { selectedStatus = 'all'; selectedDate = ''; }}
+        class="{selectedStatus === 'all' ? 'btn-primary' : 'btn-ghost'} btn-sm"
+      >
+        All
+      </button>
+      <button 
+        on:click={() => { selectedStatus = 'today'; selectedDate = ''; }}
+        class="{selectedStatus === 'today' ? 'btn-warning' : 'btn-ghost'} btn-sm"
+      >
+        Today ({getTodayCount()})
+      </button>
+      <button 
+        on:click={() => { selectedStatus = 'upcoming'; selectedDate = ''; }}
+        class="{selectedStatus === 'upcoming' ? 'btn-success' : 'btn-ghost'} btn-sm"
+      >
+        Upcoming ({getUpcomingCount()})
+      </button>
+      <button 
+        on:click={() => { selectedStatus = 'past'; selectedDate = ''; }}
+        class="{selectedStatus === 'past' ? 'btn-secondary' : 'btn-ghost'} btn-sm"
+      >
+        Past
+      </button>
     </div>
-
-    <!-- Search -->
-    <div>
-      <label for="search" class="block text-sm font-medium text-gray-700 mb-2">
-        Search Patients
-      </label>
-      <input
-        id="search"
-        type="text"
-        placeholder="Search by patient name or procedure..."
-        bind:value={searchTerm}
-        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
-      />
+    
+    <!-- Date and Search -->
+    <div class="flex flex-col sm:flex-row gap-4 flex-1">
+      <div class="flex-1">
+        <label for="date-filter" class="block text-sm font-medium text-gray-700 mb-1">
+          Specific Date
+        </label>
+        <input
+          id="date-filter"
+          type="date"
+          bind:value={selectedDate}
+          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+        />
+      </div>
+      <div class="flex-1">
+        <label for="search" class="block text-sm font-medium text-gray-700 mb-1">
+          Search
+        </label>
+        <input
+          id="search"
+          type="text"
+          placeholder="Patient name, procedure, notes..."
+          bind:value={searchTerm}
+          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+        />
+      </div>
     </div>
   </div>
 
   <div class="mt-4 flex items-center justify-between">
     <p class="text-sm text-gray-600">
-      Showing {filteredAppointments.length} appointment{filteredAppointments.length !== 1 ? 's' : ''}
-      {selectedDate ? `for ${formatDisplayDate(selectedDate)}` : ''}
+      Showing {filteredAppointments.length} of {appointments.length} appointments
     </p>
     <button
-      on:click={() => { selectedDate = ''; searchTerm = ''; }}
-      class="text-primary-600 hover:text-primary-700 text-sm font-medium"
+      on:click={() => { selectedDate = ''; searchTerm = ''; selectedStatus = 'all'; }}
+      class="btn-ghost btn-sm"
     >
       Clear Filters
     </button>
   </div>
 </div>
 
-<!-- Add/Edit Form Modal -->
+<!-- Enhanced Add/Edit Form Modal -->
 {#if showAddForm}
-  <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-    <div class="bg-white rounded-xl shadow-xl max-w-2xl w-full max-h-screen overflow-y-auto">
-      <div class="px-6 py-4 border-b border-gray-200">
-        <h2 class="text-xl font-semibold text-gray-900">
-          {editingId ? 'Edit Appointment' : 'Add New Appointment'}
-        </h2>
+  <div class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+    <div class="bg-white rounded-2xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+      <div class="sticky top-0 bg-white px-6 py-4 border-b border-gray-200 rounded-t-2xl">
+        <div class="flex items-center justify-between">
+          <h2 class="text-xl font-semibold text-gray-900 flex items-center gap-2">
+            <span>{editingId ? '✏️' : '➕'}</span>
+            <span>{editingId ? 'Edit Appointment' : 'New Appointment'}</span>
+          </h2>
+          <button
+            on:click={cancelForm}
+            class="btn-ghost p-2"
+            disabled={saving}
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
       </div>
 
       <form on:submit|preventDefault={saveAppointment} class="p-6 space-y-6">
@@ -348,12 +469,12 @@
             id="patient-name"
             type="text"
             bind:value={formData.patientName}
-            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 {formErrors.patientName ? 'border-red-500' : ''}"
-            placeholder="Enter patient name"
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 {formErrors.patientName ? 'form-error' : ''}"
+            placeholder="Enter patient full name"
             required
           />
           {#if formErrors.patientName}
-            <p class="mt-1 text-sm text-red-600">{formErrors.patientName}</p>
+            <p class="error-message">{formErrors.patientName}</p>
           {/if}
         </div>
 
@@ -365,29 +486,21 @@
           <select
             id="procedure"
             bind:value={formData.procedure}
-            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 {formErrors.procedure ? 'border-red-500' : ''}"
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 {formErrors.procedure ? 'form-error' : ''}"
             required
           >
             <option value="">Select procedure</option>
             {#each commonProcedures as procedure}
               <option value={procedure}>{procedure}</option>
             {/each}
-            <option value="Other">Other</option>
+            <option value="Other">Other (specify in notes)</option>
           </select>
-          {#if formData.procedure === 'Other'}
-            <input
-              type="text"
-              bind:value={formData.procedure}
-              placeholder="Enter custom procedure"
-              class="w-full mt-2 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
-            />
-          {/if}
           {#if formErrors.procedure}
-            <p class="mt-1 text-sm text-red-600">{formErrors.procedure}</p>
+            <p class="error-message">{formErrors.procedure}</p>
           {/if}
         </div>
 
-        <!-- Date and Time -->
+        <!-- Date and Time Grid -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label for="appointment-date" class="block text-sm font-medium text-gray-700 mb-2">
@@ -397,11 +510,12 @@
               id="appointment-date"
               type="date"
               bind:value={formData.date}
-              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 {formErrors.date ? 'border-red-500' : ''}"
+              min={getTodayDate()}
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 {formErrors.date ? 'form-error' : ''}"
               required
             />
             {#if formErrors.date}
-              <p class="mt-1 text-sm text-red-600">{formErrors.date}</p>
+              <p class="error-message">{formErrors.date}</p>
             {/if}
           </div>
 
@@ -409,15 +523,19 @@
             <label for="appointment-time" class="block text-sm font-medium text-gray-700 mb-2">
               Time *
             </label>
-            <input
+            <select
               id="appointment-time"
-              type="time"
               bind:value={formData.time}
-              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 {formErrors.time ? 'border-red-500' : ''}"
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 {formErrors.time ? 'form-error' : ''}"
               required
-            />
+            >
+              <option value="">Select time</option>
+              {#each timeSlots as time}
+                <option value={time}>{formatTime(time)}</option>
+              {/each}
+            </select>
             {#if formErrors.time}
-              <p class="mt-1 text-sm text-red-600">{formErrors.time}</p>
+              <p class="error-message">{formErrors.time}</p>
             {/if}
           </div>
         </div>
@@ -430,7 +548,7 @@
           <select
             id="frequency"
             bind:value={formData.frequency}
-            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
           >
             {#each frequencyOptions as frequency}
               <option value={frequency}>{frequency}</option>
@@ -447,17 +565,17 @@
             id="notes"
             bind:value={formData.notes}
             rows="3"
-            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
-            placeholder="Additional notes about the appointment..."
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 resize-none"
+            placeholder="Any special instructions, allergies, or additional information..."
           ></textarea>
         </div>
 
         <!-- Form Actions -->
-        <div class="flex justify-end space-x-4 pt-4 border-t border-gray-200">
+        <div class="flex flex-col sm:flex-row justify-end gap-3 pt-4 border-t border-gray-200">
           <button
             type="button"
             on:click={cancelForm}
-            class="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+            class="btn-secondary"
             disabled={saving}
           >
             Cancel
@@ -465,13 +583,14 @@
           <button
             type="submit"
             disabled={saving}
-            class="px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
+            class="btn-primary"
           >
             {#if saving}
-              <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+              <div class="loading-spinner"></div>
               <span>Saving...</span>
             {:else}
-              <span>{editingId ? 'Update' : 'Save'} Appointment</span>
+              <span>{editingId ? '💾' : '➕'}</span>
+              <span>{editingId ? 'Update' : 'Create'} Appointment</span>
             {/if}
           </button>
         </div>
@@ -480,62 +599,73 @@
   </div>
 {/if}
 
-<!-- Appointments List -->
+<!-- Enhanced Appointments List -->
 {#if loading}
   <div class="flex justify-center items-center py-16">
-    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
+    <div class="text-center">
+      <div class="loading-spinner h-12 w-12 text-primary-600 mx-auto mb-4"></div>
+      <p class="text-gray-600">Loading appointments...</p>
+    </div>
   </div>
 {:else if filteredAppointments.length > 0}
-  <div class="bg-white rounded-xl shadow-card border border-gray-100 overflow-hidden">
-    
-    <!-- Desktop Table -->
-    <div class="hidden md:block overflow-x-auto">
-      <table class="w-full">
-        <thead class="bg-gray-50 border-b border-gray-200">
+  <!-- Desktop Table -->
+  <div class="hidden lg:block card overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="table">
+        <thead>
           <tr>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Patient</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Procedure</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date & Time</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Frequency</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+            <th class="w-16">Status</th>
+            <th>Patient</th>
+            <th>Procedure</th>
+            <th>Date & Time</th>
+            <th>Frequency</th>
+            <th class="w-32">Actions</th>
           </tr>
         </thead>
-        <tbody class="divide-y divide-gray-200">
+        <tbody>
           {#each filteredAppointments as appointment}
-            <tr class="hover:bg-gray-50">
-              <td class="px-6 py-4">
+            {@const status = getAppointmentStatus(appointment.date)}
+            <tr class="hover:bg-primary-50">
+              <td>
+                <span class="{getStatusColor(status)} px-2 py-1 rounded-full text-xs font-medium">
+                  {getStatusText(status)}
+                </span>
+              </td>
+              <td>
                 <div>
                   <p class="font-medium text-gray-900">{appointment.patientName}</p>
                   {#if appointment.notes}
-                    <p class="text-sm text-gray-500 mt-1">{appointment.notes}</p>
+                    <p class="text-sm text-gray-500 mt-1 line-clamp-2">{appointment.notes}</p>
                   {/if}
                 </div>
               </td>
-              <td class="px-6 py-4 text-gray-900">{appointment.procedure}</td>
-              <td class="px-6 py-4">
+              <td>
+                <span class="text-gray-900 font-medium">{appointment.procedure}</span>
+              </td>
+              <td>
                 <div>
                   <p class="font-medium text-gray-900">{formatDisplayDate(appointment.date)}</p>
-                  <p class="text-sm text-primary-600">{formatTime(appointment.time)}</p>
+                  <p class="text-sm text-primary-600 font-medium">{formatTime(appointment.time)}</p>
                 </div>
               </td>
-              <td class="px-6 py-4">
-                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                  {appointment.frequency}
-                </span>
+              <td>
+                <span class="status-neutral">{appointment.frequency}</span>
               </td>
-              <td class="px-6 py-4">
-                <div class="flex items-center space-x-3">
+              <td>
+                <div class="flex items-center gap-2">
                   <button
                     on:click={() => editAppointment(appointment)}
-                    class="text-primary-600 hover:text-primary-700 font-medium text-sm"
+                    class="btn-ghost btn-sm"
+                    title="Edit appointment"
                   >
-                    Edit
+                    ✏️
                   </button>
                   <button
                     on:click={() => deleteAppointment(appointment.id)}
-                    class="text-red-600 hover:text-red-700 font-medium text-sm"
+                    class="btn-ghost btn-sm text-error-600 hover:text-error-700"
+                    title="Delete appointment"
                   >
-                    Delete
+                    🗑️
                   </button>
                 </div>
               </td>
@@ -544,67 +674,91 @@
         </tbody>
       </table>
     </div>
+  </div>
 
-    <!-- Mobile Cards -->
-    <div class="md:hidden divide-y divide-gray-200">
-      {#each filteredAppointments as appointment}
-        <div class="p-6">
-          <div class="flex items-start justify-between mb-3">
-            <div class="flex-1">
-              <h3 class="font-medium text-gray-900">{appointment.patientName}</h3>
-              <p class="text-sm text-gray-600">{appointment.procedure}</p>
+  <!-- Mobile Cards -->
+  <div class="lg:hidden space-y-4">
+    {#each filteredAppointments as appointment}
+      {@const status = getAppointmentStatus(appointment.date)}
+      <div class="card p-4">
+        <div class="flex items-start justify-between mb-3">
+          <div class="flex-1">
+            <div class="flex items-center gap-2 mb-1">
+              <h3 class="font-semibold text-gray-900">{appointment.patientName}</h3>
+              <span class="{getStatusColor(status)} px-2 py-1 rounded-full text-xs font-medium">
+                {getStatusText(status)}
+              </span>
             </div>
-            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-              {appointment.frequency}
-            </span>
+            <p class="text-sm text-gray-600">{appointment.procedure}</p>
           </div>
-          
-          <div class="flex items-center justify-between mb-4">
-            <div>
-              <p class="text-sm font-medium text-gray-900">{formatDisplayDate(appointment.date)}</p>
-              <p class="text-sm text-primary-600">{formatTime(appointment.time)}</p>
-            </div>
-          </div>
-
-          {#if appointment.notes}
-            <p class="text-sm text-gray-500 mb-4">{appointment.notes}</p>
-          {/if}
-
-          <div class="flex justify-end space-x-3">
+          <div class="flex items-center gap-1 ml-4">
             <button
               on:click={() => editAppointment(appointment)}
-              class="text-primary-600 hover:text-primary-700 font-medium text-sm"
+              class="btn-ghost btn-sm"
             >
-              Edit
+              ✏️
             </button>
             <button
               on:click={() => deleteAppointment(appointment.id)}
-              class="text-red-600 hover:text-red-700 font-medium text-sm"
+              class="btn-ghost btn-sm text-error-600"
             >
-              Delete
+              🗑️
             </button>
           </div>
         </div>
-      {/each}
-    </div>
+        
+        <div class="grid grid-cols-2 gap-4 mb-3">
+          <div>
+            <p class="text-xs text-gray-500">Date</p>
+            <p class="font-medium text-gray-900">{formatDisplayDate(appointment.date)}</p>
+          </div>
+          <div>
+            <p class="text-xs text-gray-500">Time</p>
+            <p class="font-medium text-primary-600">{formatTime(appointment.time)}</p>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between">
+          <span class="status-neutral">{appointment.frequency}</span>
+        </div>
+
+        {#if appointment.notes}
+          <div class="mt-3 pt-3 border-t border-gray-100">
+            <p class="text-xs text-gray-500 mb-1">Notes</p>
+            <p class="text-sm text-gray-600">{appointment.notes}</p>
+          </div>
+        {/if}
+      </div>
+    {/each}
   </div>
 {:else}
-  <!-- Empty State -->
-  <div class="bg-white rounded-xl shadow-card border border-gray-100 p-12 text-center">
-    <div class="text-gray-400 text-6xl mb-4">📅</div>
-    <h3 class="text-lg font-medium text-gray-900 mb-2">
-      {searchTerm || selectedDate ? 'No appointments found' : 'No appointments scheduled'}
+  <!-- Enhanced Empty State -->
+  <div class="card p-8 sm:p-12 text-center">
+    <div class="text-gray-400 text-5xl sm:text-6xl mb-4">📅</div>
+    <h3 class="text-xl font-semibold text-gray-900 mb-2">
+      {searchTerm || selectedDate || selectedStatus !== 'all' ? 'No appointments found' : 'No appointments scheduled'}
     </h3>
-    <p class="text-gray-500 mb-6">
-      {searchTerm || selectedDate 
-        ? 'Try adjusting your filters or search terms' 
-        : 'Get started by adding your first appointment'}
+    <p class="text-gray-500 mb-6 max-w-md mx-auto">
+      {searchTerm || selectedDate || selectedStatus !== 'all' 
+        ? 'Try adjusting your filters or search terms to find what you\'re looking for.' 
+        : 'Get started by scheduling your first patient appointment.'}
     </p>
-    <button
-      on:click={showAddAppointmentForm}
-      class="bg-primary-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-primary-700 transition-colors"
-    >
-      Add First Appointment
-    </button>
+    <div class="flex flex-col sm:flex-row gap-3 justify-center">
+      <button
+        on:click={showAddAppointmentForm}
+        class="btn-primary"
+      >
+        <span>➕</span>
+        <span>Schedule First Appointment</span>
+      </button>
+      {#if searchTerm || selectedDate || selectedStatus !== 'all'}
+        <button
+          on:click={() => { selectedDate = ''; searchTerm = ''; selectedStatus = 'all'; }}
+          class="btn-secondary"
+        >
+          Clear All Filters
+        </button>
+      {/if}
+    </div>
   </div>
 {/if}
