@@ -1,7 +1,12 @@
 import CryptoJS from 'crypto-js';
 
-// Get encryption key from environment variables
-const ENCRYPTION_KEY = import.meta.env.VITE_ENCRYPTION_KEY || 'aurora-dentica-default-key-2024';
+// Get encryption key from environment variables with fallback
+const ENCRYPTION_KEY = import.meta.env.VITE_ENCRYPTION_KEY || 'aurora-dentica-default-fallback-key-2024';
+
+// Log if using fallback key (remove in production)
+if (!import.meta.env.VITE_ENCRYPTION_KEY) {
+  console.warn('⚠️ Using fallback encryption key. Set VITE_ENCRYPTION_KEY in your .env file for production.');
+}
 
 /**
  * Encrypt sensitive data before storing in Firestore

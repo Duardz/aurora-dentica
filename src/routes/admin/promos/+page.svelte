@@ -57,7 +57,7 @@
     isPublic: true
   };
 
-  let formErrors: Partial<PromoForm> = {};
+  let formErrors: { [K in keyof PromoForm]?: string } = {};
   let saving = false;
 
   const promoTemplates = [

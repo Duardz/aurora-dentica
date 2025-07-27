@@ -28,6 +28,14 @@ export function initAuth() {
   if (!browser || !auth) return;
 
   onAuthStateChanged(auth, (user) => {
+    console.log('🔍 Auth state changed:', {
+      user: user ? {
+        email: user.email,
+        emailVerified: user.emailVerified,
+        uid: user.uid
+      } : null
+    });
+
     authStore.update(state => ({
       ...state,
       user,
@@ -49,21 +57,50 @@ export async function signIn(email: string, password: string): Promise<boolean> 
   authStore.update(state => ({ ...state, loading: true, error: null }));
 
   try {
-    await signInWithEmailAndPassword(auth, email, password);
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    
+    console.log('✅ Login successful:', {
+      email: userCredential.user.email,
+      emailVerified: userCredential.user.emailVerified,
+      uid: userCredential.user.uid
+    });
+
+    // Wait a moment for auth state to update
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
     return true;
   } catch (error: any) {
+    console.error('❌ Login error:', error);
+    
     let errorMessage = 'Sign in failed';
     
-    if (error.code === 'auth/invalid-email') {
-      errorMessage = 'Invalid email address';
-    } else if (error.code === 'auth/user-disabled') {
-      errorMessage = 'User account is disabled';
-    } else if (error.code === 'auth/user-not-found') {
-      errorMessage = 'No account found with this email';
-    } else if (error.code === 'auth/wrong-password') {
-      errorMessage = 'Incorrect password';
-    } else if (error.code === 'auth/invalid-credential') {
-      errorMessage = 'Invalid email or password';
+    // Handle specific error codes
+    switch (error.code) {
+      case 'auth/invalid-email':
+        errorMessage = 'Invalid email address';
+        break;
+      case 'auth/user-disabled':
+        errorMessage = 'User account is disabled';
+        break;
+      case 'auth/user-not-found':
+        errorMessage = 'No account found with this email';
+        break;
+      case 'auth/wrong-password':
+        errorMessage = 'Incorrect password';
+        break;
+      case 'auth/invalid-credential':
+        errorMessage = 'Invalid email or password';
+        break;
+      case 'auth/too-many-requests':
+        errorMessage = 'Too many failed attempts. Please try again later.';
+        break;
+      case 'auth/network-request-failed':
+        errorMessage = 'Network error. Please check your connection.';
+        break;
+      default:
+        // Don't show the raw error to users for security
+        errorMessage = 'Login failed. Please try again.';
+        break;
     }
 
     authStore.update(state => ({ 
@@ -71,6 +108,7 @@ export async function signIn(email: string, password: string): Promise<boolean> 
       loading: false, 
       error: errorMessage 
     }));
+    
     return false;
   }
 }
@@ -88,8 +126,9 @@ export async function signOutUser(): Promise<void> {
       user: null, 
       error: null 
     }));
+    console.log('✅ Signed out successfully');
   } catch (error) {
-    console.error('Sign out error:', error);
+    console.error('❌ Sign out error:', error);
   }
 }
 
@@ -102,4 +141,15 @@ export function isAuthenticated(): boolean {
     authenticated = !!state.user;
   })();
   return authenticated;
+}
+
+/**
+ * Get current user
+ */
+export function getCurrentUser(): User | null {
+  let currentUser = null;
+  authStore.subscribe(state => {
+    currentUser = state.user;
+  })();
+  return currentUser;
 }
