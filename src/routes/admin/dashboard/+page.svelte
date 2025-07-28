@@ -24,7 +24,6 @@
     description: string;
     timestamp: Date;
     status: 'success' | 'warning' | 'info' | 'error';
-    icon: string;
   }
 
   interface QuickAction {
@@ -56,28 +55,28 @@
       title: 'New Appointment',
       description: 'Schedule a patient visit',
       href: '/admin/appointments',
-      icon: '📅',
+      icon: 'M8 7V3a1 1 0 012 0v4h4a1 1 0 110 2h-4v4a1 1 0 11-2 0v-4H4a1 1 0 110-2h4z',
       color: 'from-blue-500 to-blue-600'
     },
     {
       title: 'Add Inventory',
       description: 'Track new supplies',
       href: '/admin/inventory',
-      icon: '📦',
+      icon: 'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10',
       color: 'from-purple-500 to-purple-600'
     },
     {
       title: 'Create Promotion',
       description: 'Launch marketing campaign',
       href: '/admin/promos',
-      icon: '🎉',
+      icon: 'M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z',
       color: 'from-orange-500 to-orange-600'
     },
     {
       title: 'View Reports',
       description: 'Analytics and insights',
       href: '/admin/dashboard',
-      icon: '📊',
+      icon: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z',
       color: 'from-green-500 to-green-600'
     }
   ];
@@ -99,11 +98,11 @@
             emailVerified: user.emailVerified,
             uid: user.uid
           });
-          debugInfo = `✅ Logged in as: ${user.email}`;
+          debugInfo = `Logged in as: ${user.email}`;
           loadDashboardData();
         } else {
           console.log('❌ Dashboard - No user logged in');
-          debugInfo = '❌ No user logged in';
+          debugInfo = 'No user logged in';
           loading = false;
         }
       });
@@ -133,7 +132,7 @@
 
   async function loadDashboardData() {
     if (!db || !auth?.currentUser) {
-      debugInfo += ' | ❌ Database or auth not available';
+      debugInfo += ' | Database or auth not available';
       loading = false;
       return;
     }
@@ -153,11 +152,11 @@
       // Generate recent activities (mock data for demo)
       generateRecentActivities();
       
-      debugInfo += ' | 📊 Dashboard data loaded successfully';
+      debugInfo += ' | Dashboard data loaded successfully';
       
     } catch (error) {
       console.error('❌ Dashboard loading error:', error);
-      debugInfo += ` | ❌ Error: ${error instanceof Error ? error.message : String(error)}`;
+      debugInfo += ` | Error: ${error instanceof Error ? error.message : String(error)}`;
     } finally {
       loading = false;
     }
@@ -271,8 +270,7 @@
         title: 'Appointments Today',
         description: `${dashboardStats.todayAppointments} appointments scheduled for today`,
         timestamp: new Date(),
-        status: 'info',
-        icon: '📅'
+        status: 'info'
       });
     }
     
@@ -283,8 +281,7 @@
         title: 'Low Stock Alert',
         description: `${dashboardStats.lowStockItems} items are running low`,
         timestamp: new Date(Date.now() - 30 * 60 * 1000), // 30 minutes ago
-        status: 'warning',
-        icon: '⚠️'
+        status: 'warning'
       });
     }
     
@@ -295,8 +292,7 @@
         title: 'Items Expiring Soon',
         description: `${dashboardStats.expiringItems} items expire within 30 days`,
         timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
-        status: 'warning',
-        icon: '⏰'
+        status: 'warning'
       });
     }
     
@@ -307,8 +303,7 @@
         title: 'Active Promotions',
         description: `${dashboardStats.activePromotions} promotions are currently live`,
         timestamp: new Date(Date.now() - 4 * 60 * 60 * 1000), // 4 hours ago
-        status: 'success',
-        icon: '🎉'
+        status: 'success'
       });
     }
     
@@ -320,8 +315,7 @@
         title: 'Welcome to Aurora Dentica',
         description: 'Your admin dashboard is ready to use',
         timestamp: new Date(),
-        status: 'success',
-        icon: '🦷'
+        status: 'success'
       });
     }
     
@@ -330,11 +324,21 @@
 
   function getStatusColor(status: string): string {
     switch (status) {
-      case 'success': return 'text-green-600 bg-green-50';
-      case 'warning': return 'text-yellow-600 bg-yellow-50';
-      case 'error': return 'text-red-600 bg-red-50';
-      case 'info': return 'text-blue-600 bg-blue-50';
-      default: return 'text-gray-600 bg-gray-50';
+      case 'success': return 'text-green-600 bg-green-50 border-green-200';
+      case 'warning': return 'text-yellow-600 bg-yellow-50 border-yellow-200';
+      case 'error': return 'text-red-600 bg-red-50 border-red-200';
+      case 'info': return 'text-blue-600 bg-blue-50 border-blue-200';
+      default: return 'text-gray-600 bg-gray-50 border-gray-200';
+    }
+  }
+
+  function getStatusIcon(status: string): string {
+    switch (status) {
+      case 'success': return 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z';
+      case 'warning': return 'M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.502 0L4.268 16.5c-.77.833.192 2.5 1.732 2.5z';
+      case 'error': return 'M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z';
+      case 'info': return 'M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z';
+      default: return 'M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z';
     }
   }
 
@@ -368,86 +372,81 @@
   <title>Dashboard - Aurora Dentica Admin</title>
 </svelte:head>
 
-<div class="space-y-6 lg:space-y-8">
+<div class="space-y-8">
   
   <!-- Enhanced Header Section -->
-  <div class="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 rounded-2xl lg:rounded-3xl shadow-xl text-white overflow-hidden relative">
-    <!-- Background Pattern -->
-    <div class="absolute inset-0 bg-gradient-to-br from-primary-600/20 via-transparent to-accent-600/20">
-      <div class="absolute top-4 right-4 w-32 h-32 bg-primary-500/10 rounded-full blur-2xl"></div>
-      <div class="absolute bottom-4 left-4 w-24 h-24 bg-accent-500/10 rounded-full blur-xl"></div>
-      <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-40 h-40 bg-white/5 rounded-full blur-3xl"></div>
-    </div>
-    
-    <div class="relative p-6 sm:p-8 lg:p-10">
+  <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+    <div class="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-8 sm:px-8 border-b border-gray-200">
       <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between">
         
         <!-- Welcome Section -->
         <div class="flex-1 mb-6 lg:mb-0">
-          <div class="flex items-center space-x-3 mb-4">
-            <div class="w-12 h-12 sm:w-16 sm:h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center border border-white/30">
-              <span class="text-2xl sm:text-3xl">👋</span>
+          <div class="flex items-center space-x-4 mb-4">
+            <div class="w-12 h-12 sm:w-14 sm:h-14 bg-primary-100 rounded-xl flex items-center justify-center border border-primary-200">
+              <svg class="w-6 h-6 sm:w-7 sm:h-7 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+              </svg>
             </div>
             <div>
-              <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-white drop-shadow-sm">
+              <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900">
                 {greeting}!
               </h1>
-              <p class="text-gray-200 text-sm sm:text-base font-medium">Welcome back to your dashboard</p>
+              <p class="text-gray-600 text-sm sm:text-base font-medium">Welcome back to your dashboard</p>
             </div>
           </div>
           
           <div class="space-y-3">
-            <p class="text-gray-100 text-base sm:text-lg font-medium">
+            <p class="text-gray-700 text-base sm:text-lg font-medium">
               Here's what's happening at Aurora Dentica today
             </p>
             <div class="flex items-center space-x-4 text-sm">
-              <div class="flex items-center space-x-2 bg-green-500/20 backdrop-blur-sm px-3 py-1.5 rounded-full border border-green-400/30">
-                <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse shadow-sm"></span>
-                <span class="text-green-100 font-medium">System Online</span>
+              <div class="flex items-center space-x-2 bg-green-100 px-3 py-1.5 rounded-full border border-green-200">
+                <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                <span class="text-green-700 font-medium">System Online</span>
               </div>
-              <span class="text-gray-300">•</span>
-              <span class="text-gray-200 font-medium">Last updated: {currentTime}</span>
+              <span class="text-gray-400">•</span>
+              <span class="text-gray-600 font-medium">Last updated: {currentTime}</span>
             </div>
           </div>
         </div>
 
-        <!-- Enhanced Quick Stats Preview -->
+        <!-- Quick Stats Preview -->
         <div class="lg:ml-8">
-          <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4">
+          <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
             <!-- Today's Appointments -->
-            <div class="bg-white/15 backdrop-blur-sm rounded-xl p-4 text-center border border-white/20 hover:bg-white/20 transition-all duration-200 group">
-              <div class="text-2xl sm:text-3xl font-bold text-white drop-shadow-sm group-hover:scale-105 transition-transform duration-200">
+            <div class="bg-white rounded-xl p-4 text-center border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 group">
+              <div class="text-2xl sm:text-3xl font-bold text-gray-900 group-hover:scale-105 transition-transform duration-200">
                 {dashboardStats.todayAppointments}
               </div>
-              <div class="text-xs sm:text-sm text-gray-200 font-medium uppercase tracking-wide">Today</div>
-              <div class="text-xs text-gray-300 mt-1">Appointments</div>
+              <div class="text-xs sm:text-sm text-gray-500 font-medium uppercase tracking-wide">Today</div>
+              <div class="text-xs text-gray-600 mt-1">Appointments</div>
             </div>
             
             <!-- Low Stock Items -->
-            <div class="bg-white/15 backdrop-blur-sm rounded-xl p-4 text-center border border-white/20 hover:bg-white/20 transition-all duration-200 group">
-              <div class="text-2xl sm:text-3xl font-bold text-white drop-shadow-sm group-hover:scale-105 transition-transform duration-200">
+            <div class="bg-white rounded-xl p-4 text-center border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 group">
+              <div class="text-2xl sm:text-3xl font-bold text-gray-900 group-hover:scale-105 transition-transform duration-200">
                 {dashboardStats.lowStockItems}
               </div>
-              <div class="text-xs sm:text-sm text-gray-200 font-medium uppercase tracking-wide">Low Stock</div>
-              <div class="text-xs text-gray-300 mt-1">Items</div>
+              <div class="text-xs sm:text-sm text-gray-500 font-medium uppercase tracking-wide">Low Stock</div>
+              <div class="text-xs text-gray-600 mt-1">Items</div>
             </div>
             
             <!-- Active Promotions - Hidden on mobile, visible on lg+ -->
-            <div class="bg-white/15 backdrop-blur-sm rounded-xl p-4 text-center border border-white/20 hover:bg-white/20 transition-all duration-200 group lg:block hidden">
-              <div class="text-2xl sm:text-3xl font-bold text-white drop-shadow-sm group-hover:scale-105 transition-transform duration-200">
+            <div class="bg-white rounded-xl p-4 text-center border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 group lg:block hidden">
+              <div class="text-2xl sm:text-3xl font-bold text-gray-900 group-hover:scale-105 transition-transform duration-200">
                 {dashboardStats.activePromotions}
               </div>
-              <div class="text-xs sm:text-sm text-gray-200 font-medium uppercase tracking-wide">Active</div>
-              <div class="text-xs text-gray-300 mt-1">Promotions</div>
+              <div class="text-xs sm:text-sm text-gray-500 font-medium uppercase tracking-wide">Active</div>
+              <div class="text-xs text-gray-600 mt-1">Promotions</div>
             </div>
             
             <!-- Total Inventory - Hidden on mobile, visible on lg+ -->
-            <div class="bg-white/15 backdrop-blur-sm rounded-xl p-4 text-center border border-white/20 hover:bg-white/20 transition-all duration-200 group lg:block hidden">
-              <div class="text-2xl sm:text-3xl font-bold text-white drop-shadow-sm group-hover:scale-105 transition-transform duration-200">
+            <div class="bg-white rounded-xl p-4 text-center border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 group lg:block hidden">
+              <div class="text-2xl sm:text-3xl font-bold text-gray-900 group-hover:scale-105 transition-transform duration-200">
                 {dashboardStats.totalInventoryItems}
               </div>
-              <div class="text-xs sm:text-sm text-gray-200 font-medium uppercase tracking-wide">Inventory</div>
-              <div class="text-xs text-gray-300 mt-1">Items</div>
+              <div class="text-xs sm:text-sm text-gray-500 font-medium uppercase tracking-wide">Inventory</div>
+              <div class="text-xs text-gray-600 mt-1">Items</div>
             </div>
           </div>
         </div>
@@ -457,9 +456,9 @@
 
   {#if loading}
     <!-- Enhanced Loading State -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
       {#each Array(8) as _}
-        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
           <div class="animate-pulse space-y-4">
             <div class="flex items-center space-x-3">
               <div class="w-12 h-12 bg-gray-200 rounded-xl"></div>
@@ -475,19 +474,21 @@
     </div>
   {:else}
     <!-- Main Dashboard Content -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
       
       <!-- Stats Cards Section -->
       <div class="lg:col-span-8">
         
         <!-- Primary Stats Row -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-6 lg:mb-8">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           
           <!-- Today's Appointments -->
-          <div class="bg-white rounded-xl lg:rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 group">
+          <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200 hover:shadow-md transition-all duration-200 group">
             <div class="flex items-center justify-between mb-4">
               <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform duration-200">
-                <span class="text-white text-xl">📅</span>
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3a1 1 0 012 0v4h4a1 1 0 110 2h-4v4a1 1 0 11-2 0v-4H4a1 1 0 110-2h4z"></path>
+                </svg>
               </div>
               <div class="text-right">
                 <div class="text-2xl lg:text-3xl font-bold text-gray-900">{dashboardStats.todayAppointments}</div>
@@ -503,10 +504,12 @@
           </div>
 
           <!-- Total Appointments -->
-          <div class="bg-white rounded-xl lg:rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 group">
+          <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200 hover:shadow-md transition-all duration-200 group">
             <div class="flex items-center justify-between mb-4">
               <div class="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform duration-200">
-                <span class="text-white text-xl">🗓️</span>
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v6a2 2 0 002 2h6a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                </svg>
               </div>
               <div class="text-right">
                 <div class="text-2xl lg:text-3xl font-bold text-gray-900">{dashboardStats.totalAppointments}</div>
@@ -522,10 +525,12 @@
           </div>
 
           <!-- Inventory Status -->
-          <div class="bg-white rounded-xl lg:rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 group">
+          <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200 hover:shadow-md transition-all duration-200 group">
             <div class="flex items-center justify-between mb-4">
               <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform duration-200">
-                <span class="text-white text-xl">📦</span>
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10"></path>
+                </svg>
               </div>
               <div class="text-right">
                 <div class="text-2xl lg:text-3xl font-bold text-gray-900">{dashboardStats.totalInventoryItems}</div>
@@ -541,10 +546,12 @@
           </div>
 
           <!-- Active Promotions -->
-          <div class="bg-white rounded-xl lg:rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 group">
+          <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200 hover:shadow-md transition-all duration-200 group">
             <div class="flex items-center justify-between mb-4">
               <div class="w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform duration-200">
-                <span class="text-white text-xl">🎉</span>
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"></path>
+                </svg>
               </div>
               <div class="text-right">
                 <div class="text-2xl lg:text-3xl font-bold text-gray-900">{dashboardStats.activePromotions}</div>
@@ -562,14 +569,16 @@
 
         <!-- Alert Cards Section -->
         {#if dashboardStats.lowStockItems > 0 || dashboardStats.expiringItems > 0}
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:gap-6 mb-6 lg:mb-8">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
             
             {#if dashboardStats.lowStockItems > 0}
               <!-- Low Stock Alert -->
-              <div class="bg-gradient-to-r from-yellow-50 to-orange-50 border border-yellow-200 rounded-xl lg:rounded-2xl p-6">
+              <div class="bg-gradient-to-r from-yellow-50 to-orange-50 border border-yellow-200 rounded-xl p-6">
                 <div class="flex items-start space-x-4">
                   <div class="w-12 h-12 bg-yellow-500 rounded-xl flex items-center justify-center flex-shrink-0">
-                    <span class="text-white text-xl">⚠️</span>
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.502 0L4.268 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                    </svg>
                   </div>
                   <div class="flex-1 min-w-0">
                     <h3 class="font-semibold text-yellow-900 mb-1">Low Stock Alert</h3>
@@ -578,7 +587,9 @@
                     </p>
                     <a href="/admin/inventory" class="inline-flex items-center text-sm font-medium text-yellow-700 hover:text-yellow-800 transition-colors">
                       <span>View Inventory</span>
-                      <span class="ml-1">→</span>
+                      <svg class="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                      </svg>
                     </a>
                   </div>
                 </div>
@@ -587,10 +598,12 @@
 
             {#if dashboardStats.expiringItems > 0}
               <!-- Expiring Items Alert -->
-              <div class="bg-gradient-to-r from-red-50 to-pink-50 border border-red-200 rounded-xl lg:rounded-2xl p-6">
+              <div class="bg-gradient-to-r from-red-50 to-pink-50 border border-red-200 rounded-xl p-6">
                 <div class="flex items-start space-x-4">
                   <div class="w-12 h-12 bg-red-500 rounded-xl flex items-center justify-center flex-shrink-0">
-                    <span class="text-white text-xl">⏰</span>
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
                   </div>
                   <div class="flex-1 min-w-0">
                     <h3 class="font-semibold text-red-900 mb-1">Expiring Soon</h3>
@@ -599,7 +612,9 @@
                     </p>
                     <a href="/admin/inventory" class="inline-flex items-center text-sm font-medium text-red-700 hover:text-red-800 transition-colors">
                       <span>Check Expiry Dates</span>
-                      <span class="ml-1">→</span>
+                      <svg class="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                      </svg>
                     </a>
                   </div>
                 </div>
@@ -609,7 +624,7 @@
         {/if}
 
         <!-- Quick Actions Grid -->
-        <div class="bg-white rounded-xl lg:rounded-2xl p-6 lg:p-8 shadow-sm border border-gray-100">
+        <div class="bg-white rounded-xl p-6 lg:p-8 shadow-sm border border-gray-200">
           <div class="flex items-center justify-between mb-6">
             <h2 class="text-xl lg:text-2xl font-bold text-gray-900">Quick Actions</h2>
             <button 
@@ -617,7 +632,9 @@
               class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
               title="Refresh dashboard"
             >
-              <span class="text-lg">🔄</span>
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+              </svg>
             </button>
           </div>
           
@@ -625,14 +642,16 @@
             {#each quickActions as action}
               <button
                 on:click={() => handleQuickAction(action.href)}
-                class="group relative bg-gradient-to-br {action.color} p-6 rounded-xl lg:rounded-2xl text-white hover:shadow-lg transform hover:-translate-y-1 transition-all duration-200 text-left overflow-hidden"
+                class="group relative bg-gradient-to-br {action.color} p-6 rounded-xl text-white hover:shadow-lg transform hover:-translate-y-1 transition-all duration-200 text-left overflow-hidden"
               >
                 <!-- Background Pattern -->
                 <div class="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
                 
                 <div class="relative">
-                  <div class="text-2xl lg:text-3xl mb-3 group-hover:scale-110 transition-transform duration-200">
-                    {action.icon}
+                  <div class="w-8 h-8 mb-3 group-hover:scale-110 transition-transform duration-200">
+                    <svg class="w-full h-full" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d={action.icon}></path>
+                    </svg>
                   </div>
                   <h3 class="font-semibold text-sm lg:text-base mb-1 leading-tight">
                     {action.title}
@@ -651,15 +670,17 @@
       <div class="lg:col-span-4 space-y-6">
         
         <!-- Recent Activity -->
-        <div class="bg-white rounded-xl lg:rounded-2xl p-6 shadow-sm border border-gray-100">
+        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
           <h2 class="text-xl font-bold text-gray-900 mb-6">Recent Activity</h2>
           
           {#if recentActivities.length > 0}
             <div class="space-y-4">
               {#each recentActivities as activity}
                 <div class="flex items-start space-x-4 p-3 rounded-lg hover:bg-gray-50 transition-colors">
-                  <div class="w-10 h-10 {getStatusColor(activity.status)} rounded-xl flex items-center justify-center flex-shrink-0">
-                    <span class="text-sm">{activity.icon}</span>
+                  <div class="w-10 h-10 {getStatusColor(activity.status)} rounded-xl flex items-center justify-center flex-shrink-0 border">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d={getStatusIcon(activity.status)}></path>
+                    </svg>
                   </div>
                   <div class="flex-1 min-w-0">
                     <h4 class="font-medium text-gray-900 text-sm leading-tight">{activity.title}</h4>
@@ -671,44 +692,46 @@
             </div>
           {:else}
             <div class="text-center py-8 text-gray-500">
-              <div class="text-4xl mb-4">📊</div>
+              <svg class="w-12 h-12 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+              </svg>
               <p class="text-sm">No recent activity</p>
             </div>
           {/if}
         </div>
 
         <!-- System Status -->
-        <div class="bg-white rounded-xl lg:rounded-2xl p-6 shadow-sm border border-gray-100">
+        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
           <h2 class="text-xl font-bold text-gray-900 mb-6">System Status</h2>
           
           <div class="space-y-4">
-            <div class="flex items-center justify-between p-3 bg-green-50 rounded-lg">
+            <div class="flex items-center justify-between p-3 bg-green-50 rounded-lg border border-green-200">
               <div class="flex items-center space-x-3">
                 <div class="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
                 <span class="text-sm font-medium text-green-800">Database</span>
               </div>
-              <span class="text-xs text-green-600 font-medium">Online</span>
+              <span class="text-xs text-green-600 font-medium px-2 py-1 bg-green-100 rounded-full">Online</span>
             </div>
             
-            <div class="flex items-center justify-between p-3 bg-green-50 rounded-lg">
+            <div class="flex items-center justify-between p-3 bg-green-50 rounded-lg border border-green-200">
               <div class="flex items-center space-x-3">
                 <div class="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
                 <span class="text-sm font-medium text-green-800">Authentication</span>
               </div>
-              <span class="text-xs text-green-600 font-medium">Active</span>
+              <span class="text-xs text-green-600 font-medium px-2 py-1 bg-green-100 rounded-full">Active</span>
             </div>
             
-            <div class="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
+            <div class="flex items-center justify-between p-3 bg-blue-50 rounded-lg border border-blue-200">
               <div class="flex items-center space-x-3">
                 <div class="w-3 h-3 bg-blue-500 rounded-full animate-pulse"></div>
                 <span class="text-sm font-medium text-blue-800">Backup</span>
               </div>
-              <span class="text-xs text-blue-600 font-medium">Synced</span>
+              <span class="text-xs text-blue-600 font-medium px-2 py-1 bg-blue-100 rounded-full">Synced</span>
             </div>
             
             <!-- Debug Info (Development Only) -->
             {#if debugInfo}
-              <div class="mt-4 p-3 bg-gray-50 rounded-lg">
+              <div class="mt-4 p-3 bg-gray-50 rounded-lg border border-gray-200">
                 <h4 class="text-xs font-semibold text-gray-700 mb-2">Debug Info</h4>
                 <p class="text-xs text-gray-600 font-mono leading-relaxed break-all">{debugInfo}</p>
               </div>
@@ -717,7 +740,7 @@
         </div>
 
         <!-- Quick Stats Summary -->
-        <div class="bg-white rounded-xl lg:rounded-2xl p-6 shadow-sm border border-gray-100">
+        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
           <h2 class="text-xl font-bold text-gray-900 mb-6">Summary</h2>
           
           <div class="space-y-4">
@@ -755,7 +778,11 @@
             on:click={() => handleQuickAction(action.href)}
             class="flex flex-col items-center p-3 rounded-xl hover:bg-gray-50 transition-colors"
           >
-            <span class="text-xl mb-1">{action.icon}</span>
+            <div class="w-8 h-8 mb-1 text-gray-600">
+              <svg class="w-full h-full" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d={action.icon}></path>
+              </svg>
+            </div>
             <span class="text-xs font-medium text-gray-700 text-center leading-tight">{action.title.split(' ')[0]}</span>
           </button>
         {/each}
@@ -916,51 +943,5 @@
 
   .activity-scroll::-webkit-scrollbar-thumb:hover {
     background: #94a3b8;
-  }
-
-  /* Enhanced loading states */
-  .loading-shimmer {
-    background: linear-gradient(90deg, 
-      rgba(255, 255, 255, 0) 0%, 
-      rgba(255, 255, 255, 0.8) 50%, 
-      rgba(255, 255, 255, 0) 100%);
-    background-size: 200% 100%;
-    animation: shimmer 1.5s infinite;
-  }
-
-  @keyframes shimmer {
-    0% {
-      background-position: 200% 0;
-    }
-    100% {
-      background-position: -200% 0;
-    }
-  }
-
-  /* Tooltip styles for quick actions */
-  .tooltip {
-    position: relative;
-  }
-
-  .tooltip::before {
-    content: attr(data-tooltip);
-    position: absolute;
-    bottom: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(0, 0, 0, 0.9);
-    color: white;
-    padding: 0.5rem 0.75rem;
-    border-radius: 0.5rem;
-    font-size: 0.75rem;
-    white-space: nowrap;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.2s;
-    z-index: 1000;
-  }
-
-  .tooltip:hover::before {
-    opacity: 1;
   }
 </style>
