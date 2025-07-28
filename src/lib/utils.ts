@@ -1,9 +1,13 @@
 /**
- * Format date to YYYY-MM-DD format
+ * Format date to YYYY-MM-DD format (LOCAL TIME, not UTC)
  */
 export function formatDate(date: Date | string): string {
   const d = new Date(date);
-  return d.toISOString().split('T')[0];
+  // Use local date, not UTC to avoid timezone issues
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
 }
 
 /**
@@ -30,24 +34,61 @@ export function formatTime(time: string): string {
 }
 
 /**
- * Get today's date in YYYY-MM-DD format
+ * Get today's date in YYYY-MM-DD format (LOCAL TIME)
+ * This fixes the timezone issue!
  */
 export function getTodayDate(): string {
-  return formatDate(new Date());
+  const today = new Date();
+  // Force local timezone by using getFullYear, getMonth, getDate
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, '0');
+  const day = String(today.getDate()).padStart(2, '0');
+  const todayString = `${year}-${month}-${day}`;
+  
+  // Debug log to see what's happening
+  console.log('🗓️ Today calculation:', {
+    rawDate: today,
+    formattedToday: todayString,
+    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+    utcDate: today.toISOString().split('T')[0],
+    localDate: todayString
+  });
+  
+  return todayString;
 }
 
 /**
- * Check if a date is today
+ * Check if a date is today (FIXED LOGIC)
  */
 export function isToday(date: string): boolean {
-  return date === getTodayDate();
+  const today = getTodayDate();
+  const result = date === today;
+  
+  // Debug log
+  console.log('📅 isToday check:', {
+    inputDate: date,
+    todayDate: today,
+    isToday: result
+  });
+  
+  return result;
 }
 
 /**
- * Check if a date is in the past
+ * Check if a date is in the past (FIXED LOGIC)
  */
 export function isPastDate(date: string): boolean {
-  return new Date(date) < new Date(getTodayDate());
+  const today = getTodayDate();
+  const result = date < today;
+  
+  // Debug log
+  console.log('⏪ isPastDate check:', {
+    inputDate: date,
+    todayDate: today,
+    isPast: result
+  });
+  
+  return result;
 }
 
 /**
@@ -153,4 +194,19 @@ export function isValidEmail(email: string): boolean {
  */
 export function generateId(): string {
   return Math.random().toString(36).substr(2, 9);
+}
+
+/**
+ * Get current date and time info for debugging
+ */
+export function getDateDebugInfo(): object {
+  const now = new Date();
+  return {
+    currentTime: now,
+    utcDate: now.toISOString().split('T')[0],
+    localDate: getTodayDate(),
+    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+    offset: now.getTimezoneOffset(),
+    timestamp: now.getTime()
+  };
 }

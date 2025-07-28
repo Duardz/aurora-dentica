@@ -61,6 +61,12 @@
   let showDeleteConfirm = false;
   let deleteItemId = '';
 
+  // Reactive stats - Fixed to properly update
+  $: todayCount = appointments.filter(apt => apt.date === getTodayDate()).length;
+  $: upcomingCount = appointments.filter(apt => apt.date > getTodayDate()).length;
+  $: pastCount = appointments.filter(apt => apt.date < getTodayDate()).length;
+  $: totalCount = appointments.length;
+
   const frequencyOptions = [
     'One-time',
     'Weekly',
@@ -166,20 +172,6 @@
       console.log('✅ Total appointments loaded:', appointments.length);
       console.log('📊 Sample appointments:', appointments.slice(0, 3));
       
-      // Log count calculations
-      const today = getTodayDate();
-      const todayCount = appointments.filter(apt => apt.date === today).length;
-      const upcomingCount = appointments.filter(apt => apt.date > today).length;
-      const pastCount = appointments.filter(apt => apt.date < today).length;
-      
-      console.log('📈 Count breakdown:', {
-        today: todayCount,
-        upcoming: upcomingCount, 
-        past: pastCount,
-        total: appointments.length,
-        todayDate: today
-      });
-
       filterAppointments();
     } catch (error) {
       console.error('❌ Error loading appointments:', error);
@@ -350,6 +342,7 @@
     };
     editingId = appointment.id;
     showAddForm = true;
+    showMobileFilters = false;
   }
 
   function confirmDelete(id: string) {
@@ -373,6 +366,7 @@
   function showAddAppointmentForm() {
     resetForm();
     showAddForm = true;
+    showMobileFilters = false;
   }
 
   function cancelForm() {
@@ -414,27 +408,6 @@
     }
   }
 
-  function getTodayCount(): number {
-    const today = getTodayDate();
-    const count = appointments.filter(apt => apt.date === today).length;
-    console.log('📊 getTodayCount:', { today, count, appointments: appointments.length });
-    return count;
-  }
-
-  function getUpcomingCount(): number {
-    const today = getTodayDate();
-    const count = appointments.filter(apt => apt.date > today).length;
-    console.log('📊 getUpcomingCount:', { today, count, appointments: appointments.length });
-    return count;
-  }
-
-  function getPastCount(): number {
-    const today = getTodayDate();
-    const count = appointments.filter(apt => apt.date < today).length;
-    console.log('📊 getPastCount:', { today, count, appointments: appointments.length });
-    return count;
-  }
-
   function clearFilters() {
     selectedStatus = 'all';
     selectedDate = '';
@@ -445,109 +418,126 @@
   function toggleMobileFilters() {
     showMobileFilters = !showMobileFilters;
   }
+
+  // Close mobile filters when clicking outside
+  function handleClickOutside(event: MouseEvent) {
+    const target = event.target as Element;
+    if (!target.closest('.mobile-filters') && !target.closest('.filter-toggle-btn')) {
+      showMobileFilters = false;
+    }
+  }
+
+  onMount(() => {
+    document.addEventListener('click', handleClickOutside);
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  });
 </script>
 
 <svelte:head>
   <title>Appointments - Aurora Dentica Admin</title>
 </svelte:head>
 
-<div class="space-y-6 lg:space-y-8">
+<div class="space-y-4 md:space-y-6">
 
-  <!-- Enhanced Page Header with Stats -->
-  <div class="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 rounded-2xl lg:rounded-3xl shadow-xl text-white overflow-hidden relative">
+  <!-- Enhanced Page Header -->
+  <div class="bg-gradient-to-r from-green-600 via-blue-600 to-green-700 rounded-xl md:rounded-2xl shadow-lg text-white overflow-hidden relative">
     <!-- Background Pattern -->
-    <div class="absolute inset-0 bg-gradient-to-br from-blue-600/20 via-transparent to-green-600/20">
-      <div class="absolute top-4 right-4 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl"></div>
-      <div class="absolute bottom-4 left-4 w-24 h-24 bg-green-500/10 rounded-full blur-xl"></div>
+    <div class="absolute inset-0 opacity-10">
+      <div class="absolute top-4 right-4 w-16 h-16 md:w-24 md:h-24 bg-white rounded-full"></div>
+      <div class="absolute bottom-4 left-4 w-12 h-12 md:w-16 md:h-16 bg-white rounded-full"></div>
     </div>
     
-    <div class="relative p-6 sm:p-8 lg:p-10">
-      <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between">
+    <div class="relative p-4 md:p-6 lg:p-8">
+      <div class="flex flex-col space-y-4 md:space-y-0 md:flex-row md:items-center md:justify-between">
         
         <!-- Header Content -->
-        <div class="flex-1 mb-6 lg:mb-0">
-          <div class="flex items-center gap-4 mb-4">
-            <div class="w-12 h-12 sm:w-16 sm:h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center border border-white/30">
-              <span class="text-2xl sm:text-3xl">📅</span>
+        <div class="flex-1">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-10 h-10 md:w-12 md:h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
+              <span class="text-xl md:text-2xl">📅</span>
             </div>
             <div>
-              <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-white drop-shadow-sm">
-                Appointments
-              </h1>
-              <p class="text-gray-200 text-sm sm:text-base font-medium">Manage patient appointments and schedules</p>
+              <h1 class="text-xl md:text-2xl lg:text-3xl font-bold">Appointments</h1>
+              <p class="text-green-100 text-sm md:text-base">Manage patient appointments and schedules</p>
             </div>
           </div>
         </div>
 
-        <!-- Action Buttons -->
-        <div class="flex flex-col sm:flex-row gap-3">
+        <!-- Action Button -->
+        <div class="flex-shrink-0">
           <button
             on:click={showAddAppointmentForm}
-            class="bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white px-6 py-3 rounded-xl font-semibold transition-all duration-200 border border-white/30 hover:border-white/50 group flex items-center gap-2"
+            class="w-full md:w-auto bg-white text-green-600 hover:bg-green-50 px-4 md:px-6 py-2.5 md:py-3 rounded-lg md:rounded-xl font-semibold transition-all duration-200 flex items-center justify-center gap-2 shadow-md hover:shadow-lg"
           >
-            <span class="text-xl group-hover:scale-110 transition-transform duration-200">➕</span>
+            <span class="text-lg">➕</span>
             <span>New Appointment</span>
           </button>
         </div>
       </div>
 
-      <!-- Stats Preview -->
-      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 lg:gap-4 mt-6">
-        <div class="bg-white/15 backdrop-blur-sm rounded-xl p-4 text-center border border-white/20">
-          <div class="text-2xl font-bold text-white drop-shadow-sm">{getTodayCount()}</div>
-          <div class="text-xs text-gray-200 font-medium uppercase tracking-wide">Today</div>
+      <!-- Enhanced Stats Cards -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-2 md:gap-4 mt-4 md:mt-6">
+        <div class="bg-white/10 backdrop-blur-sm rounded-lg md:rounded-xl p-3 md:p-4 text-center border border-white/20">
+          <div class="text-lg md:text-2xl font-bold">{todayCount}</div>
+          <div class="text-xs md:text-sm text-green-100 font-medium">Today</div>
+          <div class="text-orange-300 text-lg md:text-xl mt-1">📅</div>
         </div>
-        <div class="bg-white/15 backdrop-blur-sm rounded-xl p-4 text-center border border-white/20">
-          <div class="text-2xl font-bold text-white drop-shadow-sm">{getUpcomingCount()}</div>
-          <div class="text-xs text-gray-200 font-medium uppercase tracking-wide">Upcoming</div>
+        <div class="bg-white/10 backdrop-blur-sm rounded-lg md:rounded-xl p-3 md:p-4 text-center border border-white/20">
+          <div class="text-lg md:text-2xl font-bold">{upcomingCount}</div>
+          <div class="text-xs md:text-sm text-green-100 font-medium">Upcoming</div>
+          <div class="text-green-300 text-lg md:text-xl mt-1">🗓️</div>
         </div>
-        <div class="bg-white/15 backdrop-blur-sm rounded-xl p-4 text-center border border-white/20">
-          <div class="text-2xl font-bold text-white drop-shadow-sm">{getPastCount()}</div>
-          <div class="text-xs text-gray-200 font-medium uppercase tracking-wide">Past</div>
+        <div class="bg-white/10 backdrop-blur-sm rounded-lg md:rounded-xl p-3 md:p-4 text-center border border-white/20">
+          <div class="text-lg md:text-2xl font-bold">{pastCount}</div>
+          <div class="text-xs md:text-sm text-green-100 font-medium">Past</div>
+          <div class="text-gray-300 text-lg md:text-xl mt-1">✅</div>
         </div>
-        <div class="bg-white/15 backdrop-blur-sm rounded-xl p-4 text-center border border-white/20">
-          <div class="text-2xl font-bold text-white drop-shadow-sm">{appointments.length}</div>
-          <div class="text-xs text-gray-200 font-medium uppercase tracking-wide">Total</div>
+        <div class="bg-white/10 backdrop-blur-sm rounded-lg md:rounded-xl p-3 md:p-4 text-center border border-white/20">
+          <div class="text-lg md:text-2xl font-bold">{totalCount}</div>
+          <div class="text-xs md:text-sm text-green-100 font-medium">Total</div>
+          <div class="text-blue-300 text-lg md:text-xl mt-1">📊</div>
         </div>
       </div>
     </div>
   </div>
 
   <!-- Enhanced Filters Section -->
-  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+  <div class="bg-white rounded-xl md:rounded-2xl shadow-sm border border-gray-100">
     
     <!-- Desktop Filters -->
     <div class="hidden lg:block p-6">
       <div class="space-y-6">
         <!-- Quick Filter Buttons -->
-        <div class="flex flex-wrap gap-3">
+        <div class="flex flex-wrap gap-2">
           <button 
             on:click={() => { selectedStatus = 'all'; selectedDate = ''; }}
-            class="{selectedStatus === 'all' && !selectedDate ? 'bg-blue-600 text-white shadow-md' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'} px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center gap-2"
+            class="{selectedStatus === 'all' && !selectedDate ? 'bg-blue-600 text-white shadow-md' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'} px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 text-sm"
           >
-            <span class="text-sm">📊</span>
-            <span>All ({appointments.length})</span>
+            <span>📊</span>
+            <span>All ({totalCount})</span>
           </button>
           <button 
             on:click={() => { selectedStatus = 'today'; selectedDate = ''; }}
-            class="{selectedStatus === 'today' ? 'bg-orange-600 text-white shadow-md' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'} px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center gap-2"
+            class="{selectedStatus === 'today' ? 'bg-orange-600 text-white shadow-md' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'} px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 text-sm"
           >
-            <span class="text-sm">📅</span>
-            <span>Today ({getTodayCount()})</span>
+            <span>📅</span>
+            <span>Today ({todayCount})</span>
           </button>
           <button 
             on:click={() => { selectedStatus = 'upcoming'; selectedDate = ''; }}
-            class="{selectedStatus === 'upcoming' ? 'bg-green-600 text-white shadow-md' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'} px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center gap-2"
+            class="{selectedStatus === 'upcoming' ? 'bg-green-600 text-white shadow-md' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'} px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 text-sm"
           >
-            <span class="text-sm">🗓️</span>
-            <span>Upcoming ({getUpcomingCount()})</span>
+            <span>🗓️</span>
+            <span>Upcoming ({upcomingCount})</span>
           </button>
           <button 
             on:click={() => { selectedStatus = 'past'; selectedDate = ''; }}
-            class="{selectedStatus === 'past' ? 'bg-gray-600 text-white shadow-md' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'} px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center gap-2"
+            class="{selectedStatus === 'past' ? 'bg-gray-600 text-white shadow-md' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'} px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 text-sm"
           >
-            <span class="text-sm">✅</span>
-            <span>Past ({getPastCount()})</span>
+            <span>✅</span>
+            <span>Past ({pastCount})</span>
           </button>
         </div>
         
@@ -587,15 +577,15 @@
         <div class="flex items-center justify-between pt-4 border-t border-gray-200">
           <p class="text-sm text-gray-600 flex items-center gap-2">
             <span class="text-lg">📋</span>
-            <span>Showing <strong>{filteredAppointments.length}</strong> of <strong>{appointments.length}</strong> appointments</span>
+            <span>Showing <strong>{filteredAppointments.length}</strong> of <strong>{totalCount}</strong> appointments</span>
           </p>
           {#if searchTerm || selectedDate || selectedStatus !== 'all'}
             <button
               on:click={clearFilters}
-              class="text-gray-500 hover:text-gray-700 text-sm font-medium flex items-center gap-2 transition-colors"
+              class="text-gray-500 hover:text-gray-700 text-sm font-medium flex items-center gap-2 transition-colors px-3 py-1.5 rounded-lg hover:bg-gray-100"
             >
               <span>✖️</span>
-              <span>Clear Filters</span>
+              <span>Clear</span>
             </button>
           {/if}
         </div>
@@ -604,91 +594,92 @@
 
     <!-- Mobile Filters -->
     <div class="lg:hidden">
-      <!-- Mobile Filter Toggle -->
-      <div class="p-4 border-b border-gray-200">
-        <div class="flex items-center justify-between">
-          <p class="text-sm text-gray-600 flex items-center gap-2">
-            <span>📋</span>
-            <span>Showing <strong>{filteredAppointments.length}</strong> of <strong>{appointments.length}</strong></span>
-          </p>
-          <button
-            on:click={toggleMobileFilters}
-            class="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2"
-          >
-            <span>🔍</span>
-            <span>Filters</span>
-          </button>
+      <!-- Mobile Filter Header -->
+      <div class="p-4 border-b border-gray-200 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <span class="text-lg">📋</span>
+          <span class="text-sm text-gray-600">
+            <strong>{filteredAppointments.length}</strong> of <strong>{totalCount}</strong> appointments
+          </span>
         </div>
+        <button
+          on:click={toggleMobileFilters}
+          class="filter-toggle-btn bg-blue-600 text-white px-3 py-2 rounded-lg font-medium flex items-center gap-2 text-sm"
+        >
+          <span>🔍</span>
+          <span>Filters</span>
+        </button>
       </div>
 
       <!-- Mobile Filter Panel -->
       {#if showMobileFilters}
-        <div class="p-4 bg-gray-50 border-b border-gray-200 space-y-4">
-          <!-- Quick Status Filters -->
+        <div class="mobile-filters p-4 bg-gray-50 border-b border-gray-200 space-y-4">
+          
+          <!-- Mobile Search -->
           <div>
-            <label class="block text-sm font-semibold text-gray-700 mb-2">Status</label>
-            <div class="grid grid-cols-2 gap-2">
-              <button 
-                on:click={() => { selectedStatus = 'all'; selectedDate = ''; }}
-                class="{selectedStatus === 'all' && !selectedDate ? 'bg-blue-600 text-white' : 'bg-white text-gray-700 border border-gray-200'} px-3 py-2 rounded-lg text-sm font-medium"
-              >
-                All ({appointments.length})
-              </button>
-              <button 
-                on:click={() => { selectedStatus = 'today'; selectedDate = ''; }}
-                class="{selectedStatus === 'today' ? 'bg-orange-600 text-white' : 'bg-white text-gray-700 border border-gray-200'} px-3 py-2 rounded-lg text-sm font-medium"
-              >
-                Today ({getTodayCount()})
-              </button>
-              <button 
-                on:click={() => { selectedStatus = 'upcoming'; selectedDate = ''; }}
-                class="{selectedStatus === 'upcoming' ? 'bg-green-600 text-white' : 'bg-white text-gray-700 border border-gray-200'} px-3 py-2 rounded-lg text-sm font-medium"
-              >
-                Upcoming ({getUpcomingCount()})
-              </button>
-              <button 
-                on:click={() => { selectedStatus = 'past'; selectedDate = ''; }}
-                class="{selectedStatus === 'past' ? 'bg-gray-600 text-white' : 'bg-white text-gray-700 border border-gray-200'} px-3 py-2 rounded-lg text-sm font-medium"
-              >
-                Past ({getPastCount()})
-              </button>
+            <div class="relative">
+              <input
+                type="text"
+                placeholder="Search appointments..."
+                bind:value={searchTerm}
+                class="w-full px-4 py-3 pl-10 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <span class="text-gray-400">🔍</span>
+              </div>
             </div>
           </div>
 
-          <!-- Date Filter -->
+          <!-- Mobile Date Filter -->
           <div>
-            <label for="mobile-date-filter" class="block text-sm font-semibold text-gray-700 mb-2">
-              Specific Date
-            </label>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Date</label>
             <input
-              id="mobile-date-filter"
               type="date"
               bind:value={selectedDate}
               class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
 
-          <!-- Search -->
-          <div>
-            <label for="mobile-search" class="block text-sm font-semibold text-gray-700 mb-2">
-              Search
-            </label>
-            <input
-              id="mobile-search"
-              type="text"
-              placeholder="Patient name, procedure..."
-              bind:value={searchTerm}
-              class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            />
+          <!-- Mobile Filter Buttons -->
+          <div class="grid grid-cols-2 gap-2">
+            <button 
+              on:click={() => { selectedStatus = 'all'; selectedDate = ''; }}
+              class="{selectedStatus === 'all' && !selectedDate ? 'bg-blue-600 text-white' : 'bg-white text-gray-700 border border-gray-200'} px-3 py-2 rounded-lg text-sm font-medium flex items-center justify-center gap-1"
+            >
+              <span>📊</span>
+              <span>All</span>
+            </button>
+            <button 
+              on:click={() => { selectedStatus = 'today'; selectedDate = ''; }}
+              class="{selectedStatus === 'today' ? 'bg-orange-600 text-white' : 'bg-white text-gray-700 border border-gray-200'} px-3 py-2 rounded-lg text-sm font-medium flex items-center justify-center gap-1"
+            >
+              <span>📅</span>
+              <span>Today</span>
+            </button>
+            <button 
+              on:click={() => { selectedStatus = 'upcoming'; selectedDate = ''; }}
+              class="{selectedStatus === 'upcoming' ? 'bg-green-600 text-white' : 'bg-white text-gray-700 border border-gray-200'} px-3 py-2 rounded-lg text-sm font-medium flex items-center justify-center gap-1"
+            >
+              <span>🗓️</span>
+              <span>Upcoming</span>
+            </button>
+            <button 
+              on:click={() => { selectedStatus = 'past'; selectedDate = ''; }}
+              class="{selectedStatus === 'past' ? 'bg-gray-600 text-white' : 'bg-white text-gray-700 border border-gray-200'} px-3 py-2 rounded-lg text-sm font-medium flex items-center justify-center gap-1"
+            >
+              <span>✅</span>
+              <span>Past</span>
+            </button>
           </div>
 
-          <!-- Clear Filters -->
+          <!-- Clear Filters Button -->
           {#if searchTerm || selectedDate || selectedStatus !== 'all'}
             <button
               on:click={clearFilters}
-              class="w-full bg-gray-200 text-gray-700 px-4 py-3 rounded-lg font-medium"
+              class="w-full bg-gray-200 text-gray-700 px-4 py-2.5 rounded-lg font-medium flex items-center justify-center gap-2"
             >
-              Clear All Filters
+              <span>✖️</span>
+              <span>Clear Filters</span>
             </button>
           {/if}
         </div>
@@ -699,17 +690,17 @@
   <!-- Enhanced Add/Edit Form Modal -->
   {#if showAddForm}
     <div class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-      <div class="bg-white rounded-2xl shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+      <div class="bg-white rounded-xl md:rounded-2xl shadow-xl w-full max-w-2xl md:max-w-4xl max-h-[90vh] overflow-y-auto">
         
         <!-- Modal Header -->
-        <div class="sticky top-0 bg-white px-6 py-4 border-b border-gray-200 rounded-t-2xl">
+        <div class="sticky top-0 bg-white px-4 md:px-6 py-4 border-b border-gray-200 rounded-t-xl md:rounded-t-2xl">
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-3">
-              <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-green-500 rounded-xl flex items-center justify-center">
-                <span class="text-white text-xl">{editingId ? '✏️' : '➕'}</span>
+              <div class="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-green-500 to-blue-500 rounded-xl flex items-center justify-center">
+                <span class="text-white text-lg md:text-xl">{editingId ? '✏️' : '➕'}</span>
               </div>
               <div>
-                <h2 class="text-xl font-bold text-gray-900">
+                <h2 class="text-lg md:text-xl font-bold text-gray-900">
                   {editingId ? 'Edit Appointment' : 'New Appointment'}
                 </h2>
                 <p class="text-gray-500 text-sm">
@@ -723,7 +714,7 @@
               disabled={saving}
               aria-label="Close form"
             >
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
               </svg>
             </button>
@@ -731,13 +722,13 @@
         </div>
 
         <!-- Modal Body -->
-        <div class="p-6">
+        <div class="p-4 md:p-6">
           <form on:submit|preventDefault={saveAppointment} class="space-y-6">
             
             <!-- Patient Information -->
-            <div class="bg-blue-50 rounded-2xl p-6">
-              <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                <span class="text-xl">👤</span>
+            <div class="bg-blue-50 rounded-xl p-4 md:p-6">
+              <h3 class="text-base md:text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                <span class="text-lg md:text-xl">👤</span>
                 <span>Patient Information</span>
               </h3>
               <div>
@@ -762,13 +753,13 @@
             </div>
 
             <!-- Appointment Details -->
-            <div class="bg-green-50 rounded-2xl p-6">
-              <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                <span class="text-xl">🏥</span>
+            <div class="bg-green-50 rounded-xl p-4 md:p-6">
+              <h3 class="text-base md:text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                <span class="text-lg md:text-xl">🏥</span>
                 <span>Appointment Details</span>
               </h3>
               
-              <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                 <!-- Procedure -->
                 <div>
                   <label for="procedure" class="block text-sm font-semibold text-gray-700 mb-2">
@@ -813,13 +804,13 @@
             </div>
 
             <!-- Schedule -->
-            <div class="bg-purple-50 rounded-2xl p-6">
-              <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                <span class="text-xl">📅</span>
+            <div class="bg-purple-50 rounded-xl p-4 md:p-6">
+              <h3 class="text-base md:text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                <span class="text-lg md:text-xl">📅</span>
                 <span>Schedule</span>
               </h3>
               
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                 <!-- Date -->
                 <div>
                   <label for="appointment-date" class="block text-sm font-semibold text-gray-700 mb-2">
@@ -868,9 +859,9 @@
             </div>
 
             <!-- Notes -->
-            <div class="bg-orange-50 rounded-2xl p-6">
-              <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                <span class="text-xl">📝</span>
+            <div class="bg-orange-50 rounded-xl p-4 md:p-6">
+              <h3 class="text-base md:text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                <span class="text-lg md:text-xl">📝</span>
                 <span>Additional Notes</span>
               </h3>
               <div>
@@ -880,18 +871,18 @@
                 <textarea
                   id="notes"
                   bind:value={formData.notes}
-                  rows="4"
+                  rows="3"
                   class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none transition-all duration-200"
-                  placeholder="Any special instructions, allergies, follow-up requirements, or additional information..."
+                  placeholder="Any special instructions, allergies, follow-up requirements..."
                 ></textarea>
               </div>
             </div>
 
             <!-- Preview -->
             {#if formData.patientName && formData.procedure && formData.date && formData.time}
-              <div class="bg-gradient-to-r from-gray-50 to-blue-50 rounded-2xl p-6 border-2 border-dashed border-blue-200">
-                <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                  <span class="text-xl">👁️</span>
+              <div class="bg-gradient-to-r from-gray-50 to-blue-50 rounded-xl p-4 md:p-6 border-2 border-dashed border-blue-200">
+                <h3 class="text-base md:text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                  <span class="text-lg md:text-xl">👁️</span>
                   <span>Appointment Preview</span>
                 </h3>
                 <div class="bg-white rounded-xl p-4 border border-blue-200">
@@ -929,22 +920,22 @@
         </div>
 
         <!-- Modal Footer -->
-        <div class="sticky bottom-0 bg-white px-6 py-4 border-t border-gray-200 rounded-b-2xl">
-          <div class="flex flex-col sm:flex-row justify-end gap-3">
+        <div class="sticky bottom-0 bg-white px-4 md:px-6 py-4 border-t border-gray-200 rounded-b-xl md:rounded-b-2xl">
+          <div class="flex flex-col-reverse sm:flex-row justify-end gap-3">
             <button
               type="button"
               on:click={cancelForm}
-              class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-6 py-3 rounded-xl font-semibold transition-all duration-200 order-2 sm:order-1"
+              class="w-full sm:w-auto bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 md:px-6 py-2.5 md:py-3 rounded-lg md:rounded-xl font-semibold transition-all duration-200"
               disabled={saving}
             >
-              <span>✖️</span>
+              <span class="mr-2">✖️</span>
               <span>Cancel</span>
             </button>
             <button
               type="submit"
               on:click={saveAppointment}
               disabled={saving || !formData.patientName || !formData.procedure || !formData.date || !formData.time}
-              class="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-200 order-1 sm:order-2 flex items-center gap-2"
+              class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white px-4 md:px-6 py-2.5 md:py-3 rounded-lg md:rounded-xl font-semibold transition-all duration-200 flex items-center justify-center gap-2"
             >
               {#if saving}
                 <div class="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
@@ -963,7 +954,7 @@
   <!-- Enhanced Delete Confirmation Modal -->
   {#if showDeleteConfirm}
     <div class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-      <div class="bg-white rounded-2xl shadow-xl max-w-md w-full">
+      <div class="bg-white rounded-xl md:rounded-2xl shadow-xl max-w-md w-full">
         <div class="p-6">
           <div class="flex items-center gap-3 mb-4">
             <div class="w-12 h-12 bg-red-500 rounded-xl flex items-center justify-center">
@@ -977,23 +968,23 @@
           <div class="text-center mb-6">
             <div class="text-6xl mb-4">⚠️</div>
             <p class="text-gray-600">
-              Are you sure you want to delete this appointment? This action is permanent and cannot be reversed.
+              Are you sure you want to delete this appointment? This action is permanent.
             </p>
           </div>
-          <div class="flex flex-col sm:flex-row justify-end gap-3">
+          <div class="flex flex-col-reverse sm:flex-row justify-end gap-3">
             <button
               on:click={() => { showDeleteConfirm = false; deleteItemId = ''; }}
-              class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-3 rounded-xl font-semibold transition-all duration-200 order-2 sm:order-1"
+              class="w-full sm:w-auto bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-3 rounded-xl font-semibold transition-all duration-200"
             >
-              <span>✖️</span>
+              <span class="mr-2">✖️</span>
               <span>Cancel</span>
             </button>
             <button
               on:click={deleteAppointment}
-              class="bg-red-600 hover:bg-red-700 text-white px-4 py-3 rounded-xl font-semibold transition-all duration-200 order-1 sm:order-2"
+              class="w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white px-4 py-3 rounded-xl font-semibold transition-all duration-200"
             >
-              <span>🗑️</span>
-              <span>Delete Appointment</span>
+              <span class="mr-2">🗑️</span>
+              <span>Delete</span>
             </button>
           </div>
         </div>
@@ -1003,44 +994,44 @@
 
   <!-- Enhanced Appointments List -->
   {#if loading}
-    <div class="flex justify-center items-center py-20">
+    <div class="flex justify-center items-center py-16 md:py-20">
       <div class="text-center">
         <div class="relative mb-6">
-          <div class="w-16 h-16 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto"></div>
+          <div class="w-12 h-12 md:w-16 md:h-16 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto"></div>
           <div class="absolute inset-0 flex items-center justify-center">
-            <span class="text-2xl">📅</span>
+            <span class="text-xl md:text-2xl">📅</span>
           </div>
         </div>
-        <h3 class="text-xl font-semibold text-gray-900 mb-2">Loading Appointments</h3>
-        <p class="text-gray-600">Please wait while we fetch your appointment data...</p>
+        <h3 class="text-lg md:text-xl font-semibold text-gray-900 mb-2">Loading Appointments</h3>
+        <p class="text-gray-600 text-sm md:text-base">Please wait while we fetch your appointment data...</p>
       </div>
     </div>
   {:else if filteredAppointments.length > 0}
     <!-- Desktop Table -->
-    <div class="hidden lg:block bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+    <div class="hidden lg:block bg-white rounded-xl md:rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
       <div class="overflow-x-auto">
         <table class="w-full">
           <thead class="bg-gray-50">
             <tr>
-              <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Status</th>
-              <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Patient & Notes</th>
-              <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Procedure</th>
-              <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Date & Time</th>
-              <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Frequency</th>
-              <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Actions</th>
+              <th class="px-4 md:px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Status</th>
+              <th class="px-4 md:px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Patient & Notes</th>
+              <th class="px-4 md:px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Procedure</th>
+              <th class="px-4 md:px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Date & Time</th>
+              <th class="px-4 md:px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Frequency</th>
+              <th class="px-4 md:px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Actions</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-200">
             {#each filteredAppointments as appointment}
               {@const status = getAppointmentStatus(appointment.date)}
               <tr class="hover:bg-gray-50 transition-colors duration-150">
-                <td class="px-6 py-4">
+                <td class="px-4 md:px-6 py-4">
                   <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border {getStatusColor(status)}">
                     <span class="mr-1">{getStatusIcon(status)}</span>
                     {getStatusText(status)}
                   </span>
                 </td>
-                <td class="px-6 py-4">
+                <td class="px-4 md:px-6 py-4">
                   <div>
                     <p class="font-semibold text-gray-900 text-base">{appointment.patientName}</p>
                     {#if appointment.notes}
@@ -1050,13 +1041,13 @@
                     {/if}
                   </div>
                 </td>
-                <td class="px-6 py-4">
+                <td class="px-4 md:px-6 py-4">
                   <div class="flex items-center gap-2">
                     <span class="text-lg">🏥</span>
                     <span class="text-gray-900 font-medium">{appointment.procedure}</span>
                   </div>
                 </td>
-                <td class="px-6 py-4">
+                <td class="px-4 md:px-6 py-4">
                   <div class="space-y-1">
                     <p class="font-semibold text-gray-900 flex items-center gap-2">
                       <span class="text-sm">📅</span>
@@ -1068,12 +1059,12 @@
                     </p>
                   </div>
                 </td>
-                <td class="px-6 py-4">
+                <td class="px-4 md:px-6 py-4">
                   <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800 border border-gray-200">
                     {appointment.frequency}
                   </span>
                 </td>
-                <td class="px-6 py-4">
+                <td class="px-4 md:px-6 py-4">
                   <div class="flex items-center gap-2">
                     <button
                       on:click={() => editAppointment(appointment)}
@@ -1099,14 +1090,14 @@
     </div>
 
     <!-- Mobile Cards -->
-    <div class="lg:hidden space-y-4">
+    <div class="lg:hidden space-y-3">
       {#each filteredAppointments as appointment}
         {@const status = getAppointmentStatus(appointment.date)}
-        <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200">
-          <div class="flex items-start justify-between mb-4">
-            <div class="flex-1">
+        <div class="bg-white rounded-lg p-4 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200">
+          <div class="flex items-start justify-between mb-3">
+            <div class="flex-1 min-w-0">
               <div class="flex items-center gap-3 mb-2">
-                <h3 class="font-bold text-gray-900 text-lg">{appointment.patientName}</h3>
+                <h3 class="font-bold text-gray-900 text-base">{appointment.patientName}</h3>
                 <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium border {getStatusColor(status)}">
                   <span class="mr-1">{getStatusIcon(status)}</span>
                   {getStatusText(status)}
@@ -1117,31 +1108,31 @@
                 <span>{appointment.procedure}</span>
               </p>
             </div>
-            <div class="flex items-center gap-2 ml-4">
+            <div class="flex items-center gap-1 ml-3">
               <button
                 on:click={() => editAppointment(appointment)}
-                class="p-3 text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-all duration-200"
+                class="p-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-all duration-200"
               >
                 <span class="text-lg">✏️</span>
               </button>
               <button
                 on:click={() => confirmDelete(appointment.id)}
-                class="p-3 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-all duration-200"
+                class="p-2 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-all duration-200"
               >
                 <span class="text-lg">🗑️</span>
               </button>
             </div>
           </div>
           
-          <div class="grid grid-cols-2 gap-4 mb-4">
-            <div class="bg-gray-50 rounded-xl p-3">
+          <div class="grid grid-cols-2 gap-3 mb-3">
+            <div class="bg-gray-50 rounded-lg p-3">
               <p class="text-xs text-gray-500 uppercase tracking-wide font-semibold">Date</p>
               <p class="font-semibold text-gray-900 flex items-center gap-2">
                 <span>📅</span>
                 <span>{formatDisplayDate(appointment.date)}</span>
               </p>
             </div>
-            <div class="bg-blue-50 rounded-xl p-3">
+            <div class="bg-blue-50 rounded-lg p-3">
               <p class="text-xs text-gray-500 uppercase tracking-wide font-semibold">Time</p>
               <p class="font-semibold text-blue-700 flex items-center gap-2">
                 <span>🕐</span>
@@ -1150,18 +1141,17 @@
             </div>
           </div>
 
-          <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center justify-between mb-3">
             <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800 border border-gray-200">
               {appointment.frequency}
             </span>
           </div>
 
           {#if appointment.notes}
-            <div class="mt-4 pt-4 border-t border-gray-200">
-              <p class="text-xs text-gray-500 uppercase tracking-wide font-semibold mb-2">Notes</p>
-              <div class="bg-gray-50 rounded-xl p-3">
+            <div class="mt-3 pt-3 border-t border-gray-200">
+              <div class="bg-gray-50 rounded-lg p-3">
                 <p class="text-sm text-gray-700 italic flex items-start gap-2">
-                  <span class="text-lg flex-shrink-0">💬</span>
+                  <span class="text-base flex-shrink-0">💬</span>
                   <span>{appointment.notes}</span>
                 </p>
               </div>
@@ -1172,12 +1162,12 @@
     </div>
   {:else}
     <!-- Enhanced Empty State -->
-    <div class="bg-white rounded-2xl p-12 sm:p-16 text-center shadow-sm border border-gray-100">
-      <div class="text-gray-400 text-6xl sm:text-7xl mb-6 animate-pulse">📅</div>
-      <h3 class="text-2xl font-bold text-gray-900 mb-4">
+    <div class="bg-white rounded-xl md:rounded-2xl p-8 md:p-16 text-center shadow-sm border border-gray-100">
+      <div class="text-gray-400 text-5xl md:text-6xl mb-6">📅</div>
+      <h3 class="text-xl md:text-2xl font-bold text-gray-900 mb-4">
         {searchTerm || selectedDate || selectedStatus !== 'all' ? 'No appointments found' : 'No appointments scheduled'}
       </h3>
-      <p class="text-gray-500 mb-8 max-w-md mx-auto text-lg leading-relaxed">
+      <p class="text-gray-500 mb-8 max-w-md mx-auto text-base md:text-lg leading-relaxed">
         {searchTerm || selectedDate || selectedStatus !== 'all' 
           ? 'Try adjusting your filters or search terms to find what you\'re looking for.' 
           : 'Get started by scheduling your first patient appointment. Build your patient base and manage your dental practice efficiently.'}
@@ -1185,7 +1175,7 @@
       <div class="flex flex-col sm:flex-row gap-4 justify-center">
         <button
           on:click={showAddAppointmentForm}
-          class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-1 flex items-center gap-2"
+          class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white px-6 md:px-8 py-3 md:py-4 rounded-lg md:rounded-xl font-bold text-base md:text-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-1 flex items-center justify-center gap-2"
         >
           <span class="text-xl">➕</span>
           <span>Schedule First Appointment</span>
@@ -1193,7 +1183,7 @@
         {#if searchTerm || selectedDate || selectedStatus !== 'all'}
           <button
             on:click={clearFilters}
-            class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-8 py-4 rounded-xl font-bold text-lg transition-all duration-200 flex items-center gap-2"
+            class="w-full sm:w-auto bg-gray-200 hover:bg-gray-300 text-gray-800 px-6 md:px-8 py-3 md:py-4 rounded-lg md:rounded-xl font-bold text-base md:text-lg transition-all duration-200 flex items-center justify-center gap-2"
           >
             <span>✖️</span>
             <span>Clear All Filters</span>
@@ -1238,16 +1228,7 @@
     }
   }
 
-  /* Modal animations */
-  .modal-overlay {
-    animation: fade-in 0.3s ease-out;
-  }
-
-  .modal-content {
-    animation: slide-up 0.4s ease-out;
-  }
-
-  /* Table row hover effects */
+  /* Table hover effects */
   table tbody tr {
     transition: all 0.15s ease;
   }
@@ -1257,14 +1238,27 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   }
 
-  /* Card hover effects */
-  .card-hover {
-    transition: all 0.2s ease;
+  /* Form enhancements */
+  input:focus, select:focus, textarea:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
   }
 
-  .card-hover:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  /* Mobile optimizations */
+  @media (max-width: 640px) {
+    .mobile-padding {
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+  }
+
+  /* Enhanced focus states */
+  button:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
   }
 
   /* Loading spinner */
@@ -1281,49 +1275,12 @@
     }
   }
 
-  /* Form enhancements */
-  input:focus, select:focus, textarea:focus {
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-  }
-
-  /* Mobile optimizations */
-  @media (max-width: 640px) {
-    .mobile-card {
-      margin: 0.5rem;
-    }
-    
-    .mobile-form {
-      padding: 1rem;
-    }
-  }
-
-  /* Enhanced focus states */
-  button:focus-visible,
-  input:focus-visible,
-  select:focus-visible,
-  textarea:focus-visible {
-    outline: 2px solid #3b82f6;
-    outline-offset: 2px;
-  }
-
   /* Reduced motion support */
   @media (prefers-reduced-motion: reduce) {
     * {
       animation-duration: 0.01ms !important;
       animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
-    }
-  }
-
-  /* High contrast support */
-  @media (prefers-contrast: high) {
-    .card {
-      border: 2px solid #000;
-    }
-    
-    button {
-      border: 2px solid currentColor;
     }
   }
 </style>
