@@ -701,315 +701,428 @@
     </div>
   </div>
 
-  <!-- Enhanced Add/Edit Form Modal -->
+  <!-- Ultra-Enhanced Add/Edit Form Modal -->
   {#if showAddForm}
-    <div class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fade-in">
-      <div class="bg-white rounded-3xl shadow-2xl max-w-5xl w-full max-h-[95vh] overflow-y-auto">
+    <div class="fixed inset-0 bg-black/70 backdrop-blur-lg flex items-center justify-center p-2 sm:p-4 z-50 overflow-y-auto">
+      <div class="bg-white rounded-3xl shadow-2xl w-full max-w-6xl max-h-[98vh] overflow-hidden animate-scale-in">
         
-        <!-- Modal Header -->
-        <div class="sticky top-0 bg-gradient-to-r from-orange-500 to-red-500 text-white px-8 py-6 rounded-t-3xl">
+        <!-- Ultra-Modern Modal Header -->
+        <div class="sticky top-0 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white px-4 sm:px-8 py-4 sm:py-6 rounded-t-3xl z-10">
           <div class="flex items-center justify-between">
-            <div class="flex items-center gap-4">
-              <div class="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center border border-white/30">
-                <span class="text-white text-2xl">{editingId ? '✏️' : '🎉'}</span>
+            <div class="flex items-center gap-3 sm:gap-4">
+              <div class="w-12 h-12 sm:w-16 sm:h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center border border-white/30 shadow-lg">
+                <span class="text-white text-xl sm:text-2xl animate-bounce">{editingId ? '✏️' : '🎉'}</span>
               </div>
               <div>
-                <h2 class="text-2xl font-bold text-white drop-shadow-lg">
+                <h2 class="text-xl sm:text-2xl lg:text-3xl font-bold text-white drop-shadow-lg">
                   {editingId ? 'Edit Promotion' : 'Create New Promotion'}
                 </h2>
-                <p class="text-orange-100 text-lg">
+                <p class="text-purple-100 text-sm sm:text-base lg:text-lg font-medium">
                   {editingId ? 'Update promotion details and settings' : 'Create a new marketing campaign to attract customers'}
                 </p>
               </div>
             </div>
             <button
               on:click={cancelForm}
-              class="p-3 hover:bg-white/20 rounded-xl transition-all duration-300 group" 
+              class="p-2 sm:p-3 hover:bg-white/20 rounded-xl transition-all duration-300 group flex-shrink-0" 
               disabled={saving}
               aria-label="Close form"
             >
-              <svg class="w-7 h-7 text-white group-hover:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-6 h-6 sm:w-7 sm:h-7 text-white group-hover:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
               </svg>
             </button>
           </div>
         </div>
 
-        <!-- Modal Body -->
-        <div class="p-8">
-          <!-- Templates Section (only for new promotions) -->
-          {#if !editingId}
-            <div class="mb-10">
-              <h3 class="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
-                <span class="text-2xl">⚡</span>
-                <span>Quick Start Templates</span>
-              </h3>
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {#each promoTemplates as template}
-                  <button
-                    type="button"
-                    on:click={() => applyTemplate(template)}
-                    class="text-left p-6 border-3 border-gray-200 rounded-2xl hover:border-orange-400 hover:bg-orange-50 transition-all duration-300 group transform hover:scale-105 hover:shadow-lg"
-                  >
-                    <div class="flex items-start justify-between mb-3">
-                      <div class="font-bold text-lg text-gray-900 group-hover:text-orange-700 transition-colors">{template.name}</div>
-                      <div class="text-orange-600 font-bold bg-orange-100 px-3 py-1 rounded-lg text-sm">{template.discount}</div>
-                    </div>
-                    <div class="text-gray-800 font-semibold mb-2">{template.title}</div>
-                    <div class="text-sm text-gray-600 line-clamp-2">{template.description}</div>
-                    <div class="mt-4 text-orange-600 font-semibold text-sm flex items-center gap-2">
-                      <span>👆</span>
-                      <span>Click to use this template</span>
-                    </div>
-                  </button>
-                {/each}
-              </div>
-            </div>
-          {/if}
-
-          <form on:submit|preventDefault={savePromotion} class="space-y-10">
+        <!-- Modal Body with Enhanced Scrolling -->
+        <div class="overflow-y-auto max-h-[calc(98vh-200px)] scroll-smooth">
+          <div class="p-4 sm:p-6 lg:p-8">
             
-            <!-- Basic Information Section -->
-            <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-3xl p-8 border border-blue-200">
-              <h3 class="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
-                <span class="text-2xl">📝</span>
-                <span>Basic Information</span>
-              </h3>
-              
-              <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <!-- Title -->
-                <div class="md:col-span-2">
-                  <label for="promo-title" class="block text-lg font-bold text-gray-700 mb-3">
-                    Promotion Title *
-                  </label>
-                  <input
-                    id="promo-title"
-                    type="text"
-                    bind:value={formData.title}
-                    class="w-full px-6 py-4 text-lg border-2 border-gray-300 rounded-2xl focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-300 {formErrors.title ? 'border-red-500 bg-red-50' : ''}"
-                    placeholder="e.g., 20% Off First Visit"
-                    required
-                  />
-                  {#if formErrors.title}
-                    <p class="text-red-600 text-sm mt-2 flex items-center gap-2 font-semibold">
-                      <span>⚠️</span>
-                      <span>{formErrors.title}</span>
-                    </p>
-                  {/if}
+            <!-- Enhanced Templates Section (only for new promotions) -->
+            {#if !editingId}
+              <div class="mb-8 lg:mb-12">
+                <div class="text-center mb-6 sm:mb-8">
+                  <h3 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-3 sm:mb-4 flex items-center justify-center gap-3">
+                    <span class="text-2xl sm:text-3xl animate-pulse">⚡</span>
+                    <span>Quick Start Templates</span>
+                  </h3>
+                  <p class="text-gray-600 text-sm sm:text-base max-w-2xl mx-auto">Choose from our professionally designed templates to get started quickly</p>
                 </div>
-
-                <!-- Discount -->
-                <div>
-                  <label for="discount" class="block text-lg font-bold text-gray-700 mb-3">
-                    Discount Value
-                  </label>
-                  <input
-                    id="discount"
-                    type="text"
-                    bind:value={formData.discount}
-                    class="w-full px-6 py-4 text-lg border-2 border-gray-300 rounded-2xl focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-300"
-                    placeholder="e.g., 20%, $50"
-                  />
-                </div>
-              </div>
-
-              <!-- Description -->
-              <div class="mt-8">
-                <label for="promo-description" class="block text-lg font-bold text-gray-700 mb-3">
-                  Description *
-                </label>
-                <textarea
-                  id="promo-description"
-                  bind:value={formData.description}
-                  rows="5"
-                  class="w-full px-6 py-4 text-lg border-2 border-gray-300 rounded-2xl focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 resize-none transition-all duration-300 {formErrors.description ? 'border-red-500 bg-red-50' : ''}"
-                  placeholder="Describe the promotion details, terms, and how customers can claim it..."
-                  required
-                ></textarea>
-                {#if formErrors.description}
-                  <p class="text-red-600 text-sm mt-2 flex items-center gap-2 font-semibold">
-                    <span>⚠️</span>
-                    <span>{formErrors.description}</span>
-                  </p>
-                {/if}
-              </div>
-            </div>
-
-            <!-- Configuration Section -->
-            <div class="bg-gradient-to-br from-green-50 to-emerald-50 rounded-3xl p-8 border border-green-200">
-              <h3 class="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
-                <span class="text-2xl">⚙️</span>
-                <span>Promotion Settings</span>
-              </h3>
-              
-              <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <!-- Promo Code -->
-                <div>
-                  <label for="promo-code" class="block text-lg font-bold text-gray-700 mb-3">
-                    Promo Code
-                  </label>
-                  <div class="flex gap-3">
-                    <input
-                      id="promo-code"
-                      type="text"
-                      bind:value={formData.promoCode}
-                      class="flex-1 px-6 py-4 text-lg border-2 border-gray-300 rounded-2xl focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 uppercase transition-all duration-300 font-mono"
-                      placeholder="SAVE20"
-                    />
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                  {#each promoTemplates as template}
                     <button
                       type="button"
-                      on:click={generatePromoCode}
-                      class="bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white px-6 py-4 rounded-2xl font-bold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
-                      title="Generate code"
-                      aria-label="Generate promo code"
+                      on:click={() => applyTemplate(template)}
+                      class="group text-left p-4 sm:p-6 border-3 border-gray-200 rounded-2xl hover:border-indigo-400 hover:bg-gradient-to-br hover:from-indigo-50 hover:to-purple-50 transition-all duration-500 transform hover:scale-105 hover:shadow-xl relative overflow-hidden"
                     >
-                      🎲
+                      <!-- Gradient overlay on hover -->
+                      <div class="absolute inset-0 bg-gradient-to-r from-indigo-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                      
+                      <div class="relative z-10">
+                        <div class="flex items-start justify-between mb-3">
+                          <div class="font-bold text-lg sm:text-xl text-gray-900 group-hover:text-indigo-700 transition-colors duration-300">{template.name}</div>
+                          <div class="text-indigo-600 font-bold bg-indigo-100 px-3 py-1 rounded-lg text-sm group-hover:bg-indigo-600 group-hover:text-white transition-all duration-300">{template.discount}</div>
+                        </div>
+                        <div class="text-gray-800 font-semibold mb-2 sm:mb-3 text-base sm:text-lg">{template.title}</div>
+                        <div class="text-sm sm:text-base text-gray-600 line-clamp-3 leading-relaxed">{template.description}</div>
+                        <div class="mt-4 text-indigo-600 font-semibold text-sm sm:text-base flex items-center gap-2 group-hover:text-indigo-700 transition-colors duration-300">
+                          <span class="text-lg animate-bounce">👆</span>
+                          <span>Click to use this template</span>
+                        </div>
+                      </div>
                     </button>
-                  </div>
-                </div>
-
-                <!-- Max Uses -->
-                <div>
-                  <label for="max-uses" class="block text-lg font-bold text-gray-700 mb-3">
-                    Max Uses
-                  </label>
-                  <input
-                    id="max-uses"
-                    type="number"
-                    min="0"
-                    bind:value={formData.maxUses}
-                    class="w-full px-6 py-4 text-lg border-2 border-gray-300 rounded-2xl focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-300 {formErrors.maxUses ? 'border-red-500 bg-red-50' : ''}"
-                    placeholder="0 = unlimited"
-                  />
-                  {#if formErrors.maxUses}
-                    <p class="text-red-600 text-sm mt-2 flex items-center gap-2 font-semibold">
-                      <span>⚠️</span>
-                      <span>{formErrors.maxUses}</span>
-                    </p>
-                  {/if}
-                  <p class="text-sm text-gray-600 mt-2">Set to 0 for unlimited uses</p>
-                </div>
-
-                <!-- Valid Until -->
-                <div>
-                  <label for="valid-until" class="block text-lg font-bold text-gray-700 mb-3">
-                    Valid Until *
-                  </label>
-                  <input
-                    id="valid-until"
-                    type="date"
-                    bind:value={formData.validUntil}
-                    class="w-full px-6 py-4 text-lg border-2 border-gray-300 rounded-2xl focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-300 {formErrors.validUntil ? 'border-red-500 bg-red-50' : ''}"
-                    required
-                  />
-                  {#if formErrors.validUntil}
-                    <p class="text-red-600 text-sm mt-2 flex items-center gap-2 font-semibold">
-                      <span>⚠️</span>
-                      <span>{formErrors.validUntil}</span>
-                    </p>
-                  {/if}
-                </div>
-              </div>
-
-              <!-- Visibility Toggle -->
-              <div class="mt-8 p-6 bg-white rounded-2xl border-2 border-gray-200 shadow-lg">
-                <div class="flex items-center space-x-4">
-                  <div class="relative">
-                    <input
-                      id="is-public"
-                      type="checkbox"
-                      bind:checked={formData.isPublic}
-                      class="sr-only"
-                    />
-                    <button
-                      type="button"
-                      on:click={() => formData.isPublic = !formData.isPublic}
-                      class="relative inline-flex h-8 w-14 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 {formData.isPublic ? 'bg-green-600' : 'bg-gray-400'}"
-                    >
-                      <span class="sr-only">Toggle public visibility</span>
-                      <span class="{formData.isPublic ? 'translate-x-7' : 'translate-x-1'} inline-block h-6 w-6 transform rounded-full bg-white transition-transform duration-300 shadow-lg"></span>
-                    </button>
-                  </div>
-                  <label for="is-public" class="text-lg font-bold text-gray-700 flex items-center gap-3">
-                    <span class="text-2xl">{formData.isPublic ? '👁️' : '👁️‍🗨️'}</span>
-                    <span>Make this promotion public (visible on website)</span>
-                  </label>
-                </div>
-                <p class="text-sm text-gray-600 mt-3 ml-16">
-                  {formData.isPublic ? 'This promotion will be displayed on your public website' : 'This promotion will remain hidden as a draft'}
-                </p>
-              </div>
-            </div>
-
-            <!-- Live Preview -->
-            {#if formData.title || formData.description}
-              <div class="bg-gradient-to-br from-purple-50 to-pink-50 rounded-3xl p-8 border-3 border-dashed border-purple-300">
-                <h3 class="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
-                  <span class="text-2xl">👁️</span>
-                  <span>Live Preview</span>
-                </h3>
-                <div class="bg-white rounded-2xl p-8 border-2 border-purple-200 shadow-xl">
-                  {#if formData.title}
-                    <div class="flex items-start justify-between mb-4">
-                      <h4 class="text-2xl font-bold text-gray-900 flex-1">{formData.title}</h4>
-                      {#if formData.discount}
-                        <span class="bg-gradient-to-r from-orange-500 to-red-500 text-white border-2 border-orange-300 px-4 py-2 rounded-full text-lg font-bold shadow-lg ml-4">
-                          {formData.discount} OFF
-                        </span>
-                      {/if}
-                    </div>
-                  {/if}
-                  {#if formData.description}
-                    <p class="text-gray-700 mb-6 leading-relaxed text-lg">{formData.description}</p>
-                  {/if}
-                  <div class="flex items-center justify-between text-lg border-t-2 border-gray-200 pt-6">
-                    {#if formData.promoCode}
-                      <span class="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-4 py-3 rounded-xl font-mono font-bold border-2 border-blue-300 shadow-lg">
-                        Code: {formData.promoCode}
-                      </span>
-                    {/if}
-                    {#if formData.validUntil}
-                      <span class="text-gray-600 flex items-center gap-2 font-semibold">
-                        <span class="text-xl">📅</span>
-                        <span>Valid until {formatDisplayDate(formData.validUntil)}</span>
-                      </span>
-                    {/if}
-                  </div>
-                  {#if formData.maxUses > 0}
-                    <div class="mt-4 text-sm text-gray-600 bg-gray-100 rounded-xl p-4 border border-gray-200">
-                      <span class="font-semibold">⚠️ Limited to {formData.maxUses} uses</span>
-                    </div>
-                  {/if}
+                  {/each}
                 </div>
               </div>
             {/if}
 
-          </form>
+            <form on:submit|preventDefault={savePromotion} class="space-y-8 lg:space-y-12">
+              
+              <!-- Ultra-Enhanced Basic Information Section -->
+              <div class="bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 rounded-3xl p-6 sm:p-8 border-2 border-blue-200 shadow-lg">
+                <div class="flex items-center gap-3 mb-6 sm:mb-8">
+                  <div class="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-2xl flex items-center justify-center shadow-lg">
+                    <span class="text-white text-2xl">📝</span>
+                  </div>
+                  <div>
+                    <h3 class="text-xl sm:text-2xl font-bold text-gray-900">Basic Information</h3>
+                    <p class="text-gray-600 text-sm sm:text-base">Essential details for your promotion</p>
+                  </div>
+                </div>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
+                  <!-- Enhanced Title Input -->
+                  <div class="lg:col-span-2">
+                    <label for="promo-title" class="block text-base sm:text-lg font-bold text-gray-700 mb-3 flex items-center gap-2">
+                      <span class="text-lg">🏷️</span>
+                      <span>Promotion Title *</span>
+                    </label>
+                    <div class="relative">
+                      <input
+                        id="promo-title"
+                        type="text"
+                        bind:value={formData.title}
+                        class="w-full px-4 sm:px-6 py-3 sm:py-4 text-base sm:text-lg border-2 border-gray-300 rounded-2xl focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-300 shadow-sm hover:shadow-md {formErrors.title ? 'border-red-500 bg-red-50' : ''}"
+                        placeholder="e.g., 20% Off First Visit"
+                        required
+                      />
+                      <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
+                        <span class="text-gray-400 text-sm">{formData.title.length}/100</span>
+                      </div>
+                    </div>
+                    {#if formErrors.title}
+                      <div class="mt-3 p-3 bg-red-50 border border-red-200 rounded-lg">
+                        <p class="text-red-600 text-sm font-semibold flex items-center gap-2">
+                          <span class="text-lg">⚠️</span>
+                          <span>{formErrors.title}</span>
+                        </p>
+                      </div>
+                    {/if}
+                  </div>
+
+                  <!-- Enhanced Discount Input -->
+                  <div>
+                    <label for="discount" class="block text-base sm:text-lg font-bold text-gray-700 mb-3 flex items-center gap-2">
+                      <span class="text-lg">💰</span>
+                      <span>Discount Value</span>
+                    </label>
+                    <input
+                      id="discount"
+                      type="text"
+                      bind:value={formData.discount}
+                      class="w-full px-4 sm:px-6 py-3 sm:py-4 text-base sm:text-lg border-2 border-gray-300 rounded-2xl focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-300 shadow-sm hover:shadow-md"
+                      placeholder="e.g., 20%, $50"
+                    />
+                    <p class="text-xs text-gray-500 mt-2">Examples: 20%, $50, Buy 1 Get 1</p>
+                  </div>
+                </div>
+
+                <!-- Enhanced Description -->
+                <div class="mt-6 lg:mt-8">
+                  <label for="promo-description" class="block text-base sm:text-lg font-bold text-gray-700 mb-3 flex items-center gap-2">
+                    <span class="text-lg">📄</span>
+                    <span>Description *</span>
+                  </label>
+                  <div class="relative">
+                    <textarea
+                      id="promo-description"
+                      bind:value={formData.description}
+                      rows="5"
+                      class="w-full px-4 sm:px-6 py-3 sm:py-4 text-base sm:text-lg border-2 border-gray-300 rounded-2xl focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 resize-none transition-all duration-300 shadow-sm hover:shadow-md {formErrors.description ? 'border-red-500 bg-red-50' : ''}"
+                      placeholder="Describe the promotion details, terms, and how customers can claim it..."
+                      required
+                    ></textarea>
+                    <div class="absolute bottom-3 right-3 text-xs text-gray-400 pointer-events-none">
+                      {formData.description.length}/500
+                    </div>
+                  </div>
+                  {#if formErrors.description}
+                    <div class="mt-3 p-3 bg-red-50 border border-red-200 rounded-lg">
+                      <p class="text-red-600 text-sm font-semibold flex items-center gap-2">
+                        <span class="text-lg">⚠️</span>
+                        <span>{formErrors.description}</span>
+                      </p>
+                    </div>
+                  {/if}
+                </div>
+              </div>
+
+              <!-- Ultra-Enhanced Configuration Section -->
+              <div class="bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 rounded-3xl p-6 sm:p-8 border-2 border-green-200 shadow-lg">
+                <div class="flex items-center gap-3 mb-6 sm:mb-8">
+                  <div class="w-12 h-12 bg-gradient-to-r from-green-500 to-teal-500 rounded-2xl flex items-center justify-center shadow-lg">
+                    <span class="text-white text-2xl">⚙️</span>
+                  </div>
+                  <div>
+                    <h3 class="text-xl sm:text-2xl font-bold text-gray-900">Promotion Settings</h3>
+                    <p class="text-gray-600 text-sm sm:text-base">Configure advanced options and limitations</p>
+                  </div>
+                </div>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+                  <!-- Enhanced Promo Code with Generator -->
+                  <div>
+                    <label for="promo-code" class="block text-base sm:text-lg font-bold text-gray-700 mb-3 flex items-center gap-2">
+                      <span class="text-lg">🎫</span>
+                      <span>Promo Code</span>
+                    </label>
+                    <div class="flex gap-3">
+                      <div class="flex-1 relative">
+                        <input
+                          id="promo-code"
+                          type="text"
+                          bind:value={formData.promoCode}
+                          class="w-full px-4 sm:px-6 py-3 sm:py-4 pr-12 text-base sm:text-lg border-2 border-gray-300 rounded-2xl focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 uppercase transition-all duration-300 font-mono shadow-sm hover:shadow-md"
+                          placeholder="SAVE20"
+                        />
+                        {#if formData.promoCode}
+                          <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                            <span class="text-green-500 text-lg">✓</span>
+                          </div>
+                        {/if}
+                      </div>
+                      <button
+                        type="button"
+                        on:click={generatePromoCode}
+                        class="bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white px-4 sm:px-6 py-3 sm:py-4 rounded-2xl font-bold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center gap-2"
+                        title="Generate code"
+                        aria-label="Generate promo code"
+                      >
+                        <span class="text-lg">🎲</span>
+                        <span class="hidden sm:inline">Generate</span>
+                      </button>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-2">Leave empty for no code requirement</p>
+                  </div>
+
+                  <!-- Enhanced Max Uses -->
+                  <div>
+                    <label for="max-uses" class="block text-base sm:text-lg font-bold text-gray-700 mb-3 flex items-center gap-2">
+                      <span class="text-lg">📊</span>
+                      <span>Usage Limit</span>
+                    </label>
+                    <div class="relative">
+                      <input
+                        id="max-uses"
+                        type="number"
+                        min="0"
+                        max="10000"
+                        bind:value={formData.maxUses}
+                        class="w-full px-4 sm:px-6 py-3 sm:py-4 text-base sm:text-lg border-2 border-gray-300 rounded-2xl focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-300 shadow-sm hover:shadow-md {formErrors.maxUses ? 'border-red-500 bg-red-50' : ''}"
+                        placeholder="0"
+                      />
+                      <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
+                        <span class="text-gray-400 text-sm">{formData.maxUses === 0 ? '∞' : formData.maxUses}</span>
+                      </div>
+                    </div>
+                    {#if formErrors.maxUses}
+                      <div class="mt-3 p-3 bg-red-50 border border-red-200 rounded-lg">
+                        <p class="text-red-600 text-sm font-semibold flex items-center gap-2">
+                          <span class="text-lg">⚠️</span>
+                          <span>{formErrors.maxUses}</span>
+                        </p>
+                      </div>
+                    {:else}
+                      <p class="text-xs text-gray-500 mt-2">
+                        {formData.maxUses === 0 ? 'Unlimited uses' : `Limited to ${formData.maxUses} uses`}
+                      </p>
+                    {/if}
+                  </div>
+
+                  <!-- Enhanced Valid Until -->
+                  <div>
+                    <label for="valid-until" class="block text-base sm:text-lg font-bold text-gray-700 mb-3 flex items-center gap-2">
+                      <span class="text-lg">📅</span>
+                      <span>Valid Until *</span>
+                    </label>
+                    <div class="relative">
+                      <input
+                        id="valid-until"
+                        type="date"
+                        bind:value={formData.validUntil}
+                        min={getTodayDate()}
+                        class="w-full px-4 sm:px-6 py-3 sm:py-4 text-base sm:text-lg border-2 border-gray-300 rounded-2xl focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-300 shadow-sm hover:shadow-md {formErrors.validUntil ? 'border-red-500 bg-red-50' : ''}"
+                        required
+                      />
+                    </div>
+                    {#if formErrors.validUntil}
+                      <div class="mt-3 p-3 bg-red-50 border border-red-200 rounded-lg">
+                        <p class="text-red-600 text-sm font-semibold flex items-center gap-2">
+                          <span class="text-lg">⚠️</span>
+                          <span>{formErrors.validUntil}</span>
+                        </p>
+                      </div>
+                    {:else if formData.validUntil}
+                      <p class="text-xs text-gray-500 mt-2">
+                        Expires on {formatDisplayDate(formData.validUntil)}
+                      </p>
+                    {/if}
+                  </div>
+                </div>
+
+                <!-- Ultra-Enhanced Visibility Toggle -->
+                <div class="mt-8 p-6 bg-white rounded-2xl border-2 border-gray-200 shadow-lg">
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-4">
+                      <div class="relative">
+                        <input
+                          id="is-public"
+                          type="checkbox"
+                          bind:checked={formData.isPublic}
+                          class="sr-only"
+                        />
+                        <button
+                          type="button"
+                          on:click={() => formData.isPublic = !formData.isPublic}
+                          class="relative inline-flex h-10 w-18 items-center rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 shadow-lg {formData.isPublic ? 'bg-gradient-to-r from-green-500 to-green-600' : 'bg-gradient-to-r from-gray-400 to-gray-500'}"
+                        >
+                          <span class="sr-only">Toggle public visibility</span>
+                          <span class="{formData.isPublic ? 'translate-x-9' : 'translate-x-1'} inline-block h-8 w-8 transform rounded-full bg-white transition-transform duration-300 shadow-lg">
+                            <span class="flex items-center justify-center h-full w-full text-lg">
+                              {formData.isPublic ? '👁️' : '👁️‍🗨️'}
+                            </span>
+                          </span>
+                        </button>
+                      </div>
+                      <div class="flex-1">
+                        <label for="is-public" class="text-base sm:text-lg font-bold text-gray-700 flex items-center gap-3 cursor-pointer">
+                          <span class="text-2xl">{formData.isPublic ? '🌐' : '📝'}</span>
+                          <div>
+                            <div>Make this promotion public</div>
+                            <div class="text-sm font-normal text-gray-600">
+                              {formData.isPublic ? 'Visible on your website' : 'Saved as draft'}
+                            </div>
+                          </div>
+                        </label>
+                      </div>
+                    </div>
+                    <div class="text-right">
+                      <div class="text-2xl sm:text-3xl mb-1">
+                        {formData.isPublic ? '✅' : '⏸️'}
+                      </div>
+                      <div class="text-xs text-gray-500">
+                        {formData.isPublic ? 'Published' : 'Draft'}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Ultra-Enhanced Live Preview -->
+              {#if formData.title || formData.description}
+                <div class="bg-gradient-to-br from-purple-50 via-pink-50 to-orange-50 rounded-3xl p-6 sm:p-8 border-3 border-dashed border-purple-300 shadow-lg">
+                  <div class="flex items-center gap-3 mb-6 sm:mb-8">
+                    <div class="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center shadow-lg animate-pulse">
+                      <span class="text-white text-2xl">👁️</span>
+                    </div>
+                    <div>
+                      <h3 class="text-xl sm:text-2xl font-bold text-gray-900">Live Preview</h3>
+                      <p class="text-gray-600 text-sm sm:text-base">See how your promotion will appear to customers</p>
+                    </div>
+                  </div>
+                  
+                  <div class="bg-white rounded-2xl p-6 sm:p-8 border-2 border-purple-200 shadow-xl transform hover:scale-105 transition-transform duration-300">
+                    <div class="flex items-start justify-between mb-4 sm:mb-6 gap-4">
+                      {#if formData.title}
+                        <h4 class="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 flex-1 leading-tight">{formData.title}</h4>
+                      {/if}
+                      {#if formData.discount}
+                        <div class="flex-shrink-0">
+                          <span class="bg-gradient-to-r from-orange-500 to-red-500 text-white border-2 border-orange-300 px-4 py-2 rounded-full text-sm sm:text-base lg:text-lg font-bold shadow-lg animate-pulse">
+                            {formData.discount} OFF
+                          </span>
+                        </div>
+                      {/if}
+                    </div>
+                    
+                    {#if formData.description}
+                      <p class="text-gray-700 mb-6 leading-relaxed text-base sm:text-lg">{formData.description}</p>
+                    {/if}
+                    
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-t-2 border-gray-200 pt-6">
+                      {#if formData.promoCode}
+                        <div class="order-2 sm:order-1">
+                          <span class="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-4 py-3 rounded-xl font-mono font-bold border-2 border-blue-300 shadow-lg text-sm sm:text-base">
+                            Code: {formData.promoCode}
+                          </span>
+                        </div>
+                      {/if}
+                      {#if formData.validUntil}
+                        <div class="order-1 sm:order-2">
+                          <span class="text-gray-600 flex items-center gap-2 font-semibold text-sm sm:text-base">
+                            <span class="text-lg sm:text-xl">📅</span>
+                            <span>Valid until {formatDisplayDate(formData.validUntil)}</span>
+                          </span>
+                        </div>
+                      {/if}
+                    </div>
+                    
+                    {#if formData.maxUses > 0}
+                      <div class="mt-4 text-sm text-gray-600 bg-yellow-50 rounded-xl p-4 border-2 border-yellow-200">
+                        <div class="flex items-center gap-2">
+                          <span class="text-lg">⚠️</span>
+                          <span class="font-semibold">Limited to {formData.maxUses} uses - Act fast!</span>
+                        </div>
+                      </div>
+                    {/if}
+                    
+                    <div class="mt-6 flex items-center justify-center">
+                      <div class="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-6 py-3 rounded-xl font-bold text-base cursor-pointer hover:shadow-lg transition-shadow duration-300">
+                        Claim This Offer
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              {/if}
+
+            </form>
+          </div>
         </div>
 
-        <!-- Modal Footer -->
-        <div class="sticky bottom-0 bg-gradient-to-r from-gray-100 to-gray-200 px-8 py-6 border-t-2 border-gray-300 rounded-b-3xl">
-          <div class="flex flex-col sm:flex-row justify-end gap-4">
+        <!-- Ultra-Enhanced Modal Footer -->
+        <div class="sticky bottom-0 bg-gradient-to-r from-gray-100 via-gray-50 to-gray-100 px-4 sm:px-8 py-4 sm:py-6 border-t-2 border-gray-300 rounded-b-3xl">
+          <div class="flex flex-col sm:flex-row justify-end gap-3 sm:gap-4">
             <button
               type="button"
               on:click={cancelForm}
-              class="bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white px-8 py-4 rounded-2xl font-bold text-lg transition-all duration-300 order-2 sm:order-1 shadow-lg hover:shadow-xl transform hover:scale-105"
+              class="bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-2xl font-bold text-base sm:text-lg transition-all duration-300 order-2 sm:order-1 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center justify-center gap-2"
               disabled={saving}
             >
-              <span class="text-xl mr-2">✖️</span>
+              <span class="text-lg sm:text-xl">✖️</span>
               <span>Cancel</span>
             </button>
             <button
               type="submit"
               on:click={savePromotion}
               disabled={saving || !formData.title || !formData.description || !formData.validUntil}
-              class="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 disabled:from-gray-400 disabled:to-gray-500 text-white px-8 py-4 rounded-2xl font-bold text-lg transition-all duration-300 order-1 sm:order-2 flex items-center gap-3 shadow-lg hover:shadow-xl transform hover:scale-105 disabled:transform-none disabled:shadow-lg"
+              class="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 hover:from-blue-700 hover:via-purple-700 hover:to-pink-700 disabled:from-gray-400 disabled:to-gray-500 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-2xl font-bold text-base sm:text-lg transition-all duration-300 order-1 sm:order-2 flex items-center gap-3 shadow-lg hover:shadow-xl transform hover:scale-105 disabled:transform-none disabled:shadow-lg"
             >
               {#if saving}
-                <div class="w-6 h-6 border-3 border-white border-t-transparent rounded-full animate-spin"></div>
+                <div class="w-5 h-5 sm:w-6 sm:h-6 border-3 border-white border-t-transparent rounded-full animate-spin"></div>
                 <span>Saving...</span>
               {:else}
-                <span class="text-xl">{editingId ? '💾' : '🎉'}</span>
+                <span class="text-lg sm:text-xl">{editingId ? '💾' : '🎉'}</span>
                 <span>{editingId ? 'Update' : 'Create'} Promotion</span>
               {/if}
             </button>
@@ -1021,37 +1134,37 @@
 
   <!-- Enhanced Delete Confirmation Modal -->
   {#if showDeleteConfirm}
-    <div class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fade-in">
-      <div class="bg-white rounded-3xl shadow-2xl max-w-lg w-full">
-        <div class="p-8">
+    <div class="fixed inset-0 bg-black/70 backdrop-blur-lg flex items-center justify-center p-4 z-50 animate-fade-in">
+      <div class="bg-white rounded-3xl shadow-2xl max-w-lg w-full animate-scale-in">
+        <div class="p-6 sm:p-8">
           <div class="flex items-center gap-4 mb-6">
-            <div class="w-16 h-16 bg-red-500 rounded-2xl flex items-center justify-center shadow-lg">
-              <span class="text-white text-2xl">🗑️</span>
+            <div class="w-16 h-16 bg-gradient-to-r from-red-500 to-red-600 rounded-2xl flex items-center justify-center shadow-lg">
+              <span class="text-white text-2xl animate-bounce">🗑️</span>
             </div>
             <div>
-              <h2 class="text-2xl font-bold text-gray-900">Delete Promotion</h2>
-              <p class="text-gray-600 text-lg">This action cannot be undone</p>
+              <h2 class="text-xl sm:text-2xl font-bold text-gray-900">Delete Promotion</h2>
+              <p class="text-gray-600 text-base sm:text-lg">This action cannot be undone</p>
             </div>
           </div>
           <div class="text-center mb-8">
-            <div class="text-6xl mb-4 animate-bounce">⚠️</div>
-            <p class="text-gray-700 text-lg leading-relaxed">
+            <div class="text-6xl mb-4 animate-pulse">⚠️</div>
+            <p class="text-gray-700 text-base sm:text-lg leading-relaxed">
               Are you sure you want to delete this promotion? This action is permanent and cannot be reversed.
             </p>
           </div>
-          <div class="flex flex-col sm:flex-row justify-end gap-4">
+          <div class="flex flex-col sm:flex-row justify-end gap-3 sm:gap-4">
             <button
               on:click={() => { showDeleteConfirm = false; deleteItemId = ''; }}
-              class="bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white px-6 py-4 rounded-2xl font-bold text-lg transition-all duration-300 order-2 sm:order-1 shadow-lg hover:shadow-xl transform hover:scale-105"
+              class="bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white px-6 py-3 sm:py-4 rounded-2xl font-bold text-base sm:text-lg transition-all duration-300 order-2 sm:order-1 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center justify-center gap-2"
             >
-              <span class="text-xl mr-2">✖️</span>
+              <span class="text-lg sm:text-xl">✖️</span>
               <span>Cancel</span>
             </button>
             <button
               on:click={deletePromotion}
-              class="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white px-6 py-4 rounded-2xl font-bold text-lg transition-all duration-300 order-1 sm:order-2 shadow-lg hover:shadow-xl transform hover:scale-105"
+              class="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white px-6 py-3 sm:py-4 rounded-2xl font-bold text-base sm:text-lg transition-all duration-300 order-1 sm:order-2 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center justify-center gap-2"
             >
-              <span class="text-xl mr-2">🗑️</span>
+              <span class="text-lg sm:text-xl">🗑️</span>
               <span>Delete Promotion</span>
             </button>
           </div>
@@ -1353,6 +1466,17 @@
     }
   }
 
+  @keyframes scale-in {
+    from {
+      opacity: 0;
+      transform: scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
   @keyframes slide-up {
     from {
       opacity: 0;
@@ -1382,6 +1506,10 @@
   /* Apply animations */
   .animate-fade-in {
     animation: fade-in 0.6s ease-out;
+  }
+
+  .animate-scale-in {
+    animation: scale-in 0.3s ease-out;
   }
 
   .animate-slide-up {
@@ -1474,6 +1602,30 @@
     box-shadow: 0 35px 60px -12px rgba(0, 0, 0, 0.3);
   }
 
+  /* Smooth modal scrolling */
+  .modal-body {
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 #f1f5f9;
+  }
+
+  .modal-body::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .modal-body::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 3px;
+  }
+
+  .modal-body::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 3px;
+  }
+
+  .modal-body::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+  }
+
   /* Reduced motion for accessibility */
   @media (prefers-reduced-motion: reduce) {
     * {
@@ -1523,29 +1675,5 @@
 
   ::-webkit-scrollbar-thumb:hover {
     background: linear-gradient(135deg, #ea580c, #dc2626);
-  }
-
-  /* Enhanced button ripple effect */
-  .btn-ripple {
-    position: relative;
-    overflow: hidden;
-  }
-
-  .btn-ripple::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.3);
-    transform: translate(-50%, -50%);
-    transition: width 0.6s, height 0.6s;
-  }
-
-  .btn-ripple:active::before {
-    width: 300px;
-    height: 300px;
   }
 </style>
