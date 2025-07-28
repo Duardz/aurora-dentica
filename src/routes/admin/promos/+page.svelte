@@ -1188,7 +1188,8 @@
       </div>
     </div>
   {:else if filteredPromos.length > 0}
-    <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
+    <!-- Desktop Cards (lg and up) -->
+    <div class="hidden lg:grid lg:grid-cols-2 xl:grid-cols-3 gap-8">
       {#each filteredPromos as promo}
         {@const status = getPromoStatus(promo)}
         <div class="bg-white rounded-3xl p-8 shadow-xl border-2 border-gray-100 hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 group relative overflow-hidden">
@@ -1284,6 +1285,119 @@
               >
                 <span class="text-lg">{promo.isPublic ? '👁️' : '👁️‍🗨️'}</span>
                 <span>{promo.isPublic ? 'Public' : 'Draft'}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      {/each}
+    </div>
+
+    <!-- Mobile & Tablet Cards (up to lg) -->
+    <div class="lg:hidden space-y-4 sm:space-y-6">
+      {#each filteredPromos as promo}
+        {@const status = getPromoStatus(promo)}
+        <div class="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-xl border-2 border-gray-100 hover:shadow-2xl transition-all duration-300 relative overflow-hidden">
+          
+          <!-- Card Background Pattern -->
+          <div class="absolute inset-0 opacity-5">
+            <div class="absolute top-2 right-2 w-8 h-8 sm:w-12 sm:h-12 bg-orange-400 rounded-full blur-lg"></div>
+            <div class="absolute bottom-2 left-2 w-6 h-6 sm:w-8 sm:h-8 bg-blue-400 rounded-full blur-md"></div>
+          </div>
+
+          <!-- Mobile Header -->
+          <div class="relative mb-4 sm:mb-6">
+            <!-- Title and Status Row -->
+            <div class="flex items-start justify-between mb-3 sm:mb-4 gap-3">
+              <div class="flex-1 min-w-0">
+                <h3 class="text-lg sm:text-xl font-bold text-gray-900 leading-tight line-clamp-2">{promo.title}</h3>
+              </div>
+              <div class="flex-shrink-0">
+                <span class="inline-flex items-center px-2 sm:px-3 py-1 sm:py-2 rounded-full text-xs font-bold border-2 {status.color} shadow-lg">
+                  <span class="mr-1 text-sm">{status.icon}</span>
+                  <span class="hidden xs:inline">{status.text}</span>
+                </span>
+              </div>
+            </div>
+
+            <!-- Discount Badge -->
+            {#if promo.discount}
+              <div class="mb-3 sm:mb-4">
+                <div class="inline-flex items-center bg-gradient-to-r from-orange-500 to-red-500 text-white border-2 border-orange-300 px-3 sm:px-4 py-2 rounded-full text-sm sm:text-base font-bold shadow-lg">
+                  <span class="mr-2 text-base sm:text-lg">🏷️</span>
+                  <span>{promo.discount} OFF</span>
+                </div>
+              </div>
+            {/if}
+          </div>
+
+          <!-- Description -->
+          <p class="text-gray-600 mb-4 sm:mb-6 text-sm sm:text-base leading-relaxed line-clamp-3">{promo.description}</p>
+
+          <!-- Mobile Details Grid -->
+          <div class="grid grid-cols-1 xs:grid-cols-2 gap-3 sm:gap-4 mb-4 sm:mb-6">
+            <div class="bg-gradient-to-br from-gray-50 to-blue-50 rounded-xl sm:rounded-2xl p-3 sm:p-4 border border-gray-200">
+              <p class="text-xs text-gray-500 uppercase tracking-wide font-bold mb-1">Valid Until</p>
+              <div class="flex items-center gap-1 sm:gap-2">
+                <span class="text-base sm:text-lg">📅</span>
+                <span class="font-bold text-gray-900 text-sm sm:text-base">{formatDisplayDate(promo.validUntil)}</span>
+              </div>
+            </div>
+            <div class="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl sm:rounded-2xl p-3 sm:p-4 border border-blue-200">
+              <p class="text-xs text-gray-500 uppercase tracking-wide font-bold mb-1">Usage</p>
+              <div class="flex items-center gap-1 sm:gap-2">
+                <span class="text-base sm:text-lg">📊</span>
+                <span class="font-bold text-blue-700 text-sm sm:text-base">
+                  {#if promo.maxUses > 0}
+                    {promo.currentUses} / {promo.maxUses}
+                  {:else}
+                    {promo.currentUses} <span class="hidden xs:inline">(unlimited)</span>
+                  {/if}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Promo Code (Mobile Optimized) -->
+          {#if promo.promoCode}
+            <div class="mb-4 sm:mb-6">
+              <p class="text-xs text-gray-500 uppercase tracking-wide font-bold mb-2 sm:mb-3">Promo Code</p>
+              <div class="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-3 sm:px-4 py-2 sm:py-3 rounded-xl sm:rounded-2xl font-mono text-base sm:text-lg font-bold text-center border-2 sm:border-3 border-blue-300 shadow-lg">
+                {promo.promoCode}
+              </div>
+            </div>
+          {/if}
+
+          <!-- Mobile Actions - Stacked Layout -->
+          <div class="space-y-3 sm:space-y-4 pt-4 sm:pt-6 border-t-2 border-gray-200">
+            <!-- Edit and Delete Row -->
+            <div class="flex gap-3">
+              <button
+                on:click={() => editPromotion(promo)}
+                class="flex-1 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg sm:rounded-xl font-bold text-sm sm:text-base transition-all duration-300 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transform hover:scale-105"
+                title="Edit promotion"
+              >
+                <span class="text-base sm:text-lg">✏️</span>
+                <span>Edit</span>
+              </button>
+              <button
+                on:click={() => confirmDelete(promo.id)}
+                class="flex-1 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg sm:rounded-xl font-bold text-sm sm:text-base transition-all duration-300 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transform hover:scale-105"
+                title="Delete promotion"
+              >
+                <span class="text-base sm:text-lg">🗑️</span>
+                <span>Delete</span>
+              </button>
+            </div>
+
+            <!-- Status Toggle Row -->
+            <div class="flex justify-center">
+              <button
+                on:click={() => togglePromoStatus(promo)}
+                class="w-full {promo.isPublic ? 'bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600' : 'bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700'} text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg sm:rounded-xl font-bold text-sm sm:text-base transition-all duration-300 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transform hover:scale-105"
+                title="{promo.isPublic ? 'Make private' : 'Make public'}"
+              >
+                <span class="text-base sm:text-lg">{promo.isPublic ? '👁️' : '👁️‍🗨️'}</span>
+                <span>{promo.isPublic ? 'Make Private' : 'Make Public'}</span>
               </button>
             </div>
           </div>
