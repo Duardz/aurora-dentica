@@ -23,43 +23,43 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-/* Professional Dental Color Scheme */
+/* Professional Dental Color Scheme - Brown Theme */
 :root {
-  /* Primary - Trust Blue (Medical Professional) */
-  --primary-50: #f0f7ff;
-  --primary-100: #e0efff;
-  --primary-200: #bae2ff;
-  --primary-300: #7cc8ff;
-  --primary-400: #36aaff;
-  --primary-500: #0b8fff;
-  --primary-600: #0071f5;
-  --primary-700: #005ce1;
-  --primary-800: #0050b6;
-  --primary-900: #064490;
+  /* Primary - Warm Brown (Professional & Natural) */
+  --primary-50: #fdf8f6;
+  --primary-100: #f2e8e5;
+  --primary-200: #eaddd7;
+  --primary-300: #e0cec7;
+  --primary-400: #d2bab0;
+  --primary-500: #bfa094;
+  --primary-600: #a18072;
+  --primary-700: #8b6f47;
+  --primary-800: #6f4e37;
+  --primary-900: #5d4037;
   
-  /* Secondary - Calm Teal (Medical Clean) */
-  --secondary-50: #f0fdfa;
-  --secondary-100: #ccfbf1;
-  --secondary-200: #99f6e4;
-  --secondary-300: #5eead4;
-  --secondary-400: #2dd4bf;
-  --secondary-500: #14b8a6;
-  --secondary-600: #0d9488;
-  --secondary-700: #0f766e;
-  --secondary-800: #115e59;
-  --secondary-900: #134e4a;
+  /* Secondary - Warm Beige (Complementary Natural) */
+  --secondary-50: #fefdfb;
+  --secondary-100: #fef7ed;
+  --secondary-200: #feebc8;
+  --secondary-300: #fbd38d;
+  --secondary-400: #f6ad55;
+  --secondary-500: #ed8936;
+  --secondary-600: #dd6b20;
+  --secondary-700: #c05621;
+  --secondary-800: #9c4221;
+  --secondary-900: #7b341e;
   
-  /* Accent - Professional Green */
-  --accent-50: #f0fdf4;
-  --accent-100: #dcfce7;
-  --accent-200: #bbf7d0;
-  --accent-300: #86efac;
-  --accent-400: #4ade80;
-  --accent-500: #22c55e;
-  --accent-600: #16a34a;
-  --accent-700: #15803d;
-  --accent-800: #166534;
-  --accent-900: #14532d;
+  /* Accent - Warm Gold/Amber (Luxurious) */
+  --accent-50: #fffbeb;
+  --accent-100: #fef3c7;
+  --accent-200: #fde68a;
+  --accent-300: #fcd34d;
+  --accent-400: #fbbf24;
+  --accent-500: #f59e0b;
+  --accent-600: #d97706;
+  --accent-700: #b45309;
+  --accent-800: #92400e;
+  --accent-900: #78350f;
   
   /* Neutrals - Sophisticated Grays */
   --gray-50: #fafafa;
@@ -73,7 +73,7 @@ body {
   --gray-800: #27272a;
   --gray-900: #18181b;
   
-  /* Status Colors - Medical Standard */
+  /* Status Colors - Warm & Natural */
   --success-50: #f0fdf4;
   --success-100: #dcfce7;
   --success-500: #22c55e;
@@ -106,14 +106,14 @@ body {
   --border: #e4e4e7;
   --border-strong: #d4d4d8;
   
-  /* Enhanced Shadows for Depth */
-  --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
-  --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  --shadow-md: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-  --shadow-lg: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-  --shadow-xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
-  --shadow-2xl: 0 35px 60px -12px rgb(0 0 0 / 0.3);
+  /* Enhanced Shadows for Depth - Brown Theme */
+  --shadow-xs: 0 1px 2px 0 rgb(109 78 55 / 0.05);
+  --shadow-sm: 0 1px 3px 0 rgb(109 78 55 / 0.1), 0 1px 2px -1px rgb(109 78 55 / 0.1);
+  --shadow: 0 4px 6px -1px rgb(109 78 55 / 0.1), 0 2px 4px -2px rgb(109 78 55 / 0.1);
+  --shadow-md: 0 10px 15px -3px rgb(109 78 55 / 0.1), 0 4px 6px -4px rgb(109 78 55 / 0.1);
+  --shadow-lg: 0 20px 25px -5px rgb(109 78 55 / 0.1), 0 8px 10px -6px rgb(109 78 55 / 0.1);
+  --shadow-xl: 0 25px 50px -12px rgb(109 78 55 / 0.25);
+  --shadow-2xl: 0 35px 60px -12px rgb(109 78 55 / 0.3);
   
   /* Professional Border Radius */
   --radius-xs: 0.25rem;
@@ -131,21 +131,21 @@ body {
   --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Enhanced Scrollbar - Professional Medical Theme */
+/* Enhanced Scrollbar - Professional Brown Theme */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--gray-50);
+  background: var(--primary-50);
   border-radius: var(--radius);
 }
 
 ::-webkit-scrollbar-thumb {
   background: linear-gradient(135deg, var(--primary-400), var(--primary-500));
   border-radius: var(--radius);
-  border: 1px solid var(--gray-100);
+  border: 1px solid var(--primary-100);
   transition: background-color var(--transition);
 }
 
@@ -154,7 +154,7 @@ body {
 }
 
 ::-webkit-scrollbar-corner {
-  background: var(--gray-50);
+  background: var(--primary-50);
 }
 
 /* Professional Focus Styles */
@@ -200,12 +200,12 @@ input, textarea, select {
 
 input:hover, textarea:hover, select:hover {
   border-color: var(--primary-300);
-  box-shadow: 0 0 0 4px rgb(11 143 255 / 0.05);
+  box-shadow: 0 0 0 4px rgb(191 160 148 / 0.05);
 }
 
 input:focus, textarea:focus, select:focus {
   border-color: var(--primary-500);
-  box-shadow: 0 0 0 4px rgb(11 143 255 / 0.1);
+  box-shadow: 0 0 0 4px rgb(191 160 148 / 0.1);
   outline: none;
 }
 
@@ -244,7 +244,7 @@ button:not(:disabled):active {
   transform: translateY(1px);
 }
 
-/* Primary Button - Professional Blue */
+/* Primary Button - Professional Brown */
 .btn-primary,
 button.btn-primary,
 a.btn-primary {
@@ -599,7 +599,7 @@ a.btn-ghost:hover:not(:disabled) {
 .dental-icon {
   display: inline-block;
   font-size: 1.75em;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+  filter: drop-shadow(0 2px 4px rgba(109, 78, 55, 0.1));
   transition: transform var(--transition);
 }
 
@@ -1166,4 +1166,175 @@ a.btn-ghost:hover:not(:disabled) {
   border: 2px solid transparent;
   background: linear-gradient(white, white) padding-box,
               linear-gradient(135deg, var(--primary-300), var(--secondary-300)) border-box;
+}
+
+/* Enhanced focus states */
+.focus-ring-improved {
+  transition: all 0.2s ease-in-out;
+}
+
+.focus-ring-improved:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(191, 160, 148, 0.3);
+  transform: scale(1.02);
+}
+
+/* Modern scroll snap */
+.scroll-snap-x {
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+
+.scroll-snap-center {
+  scroll-snap-align: center;
+}
+
+/* Enhanced typography scale */
+.text-fluid-sm {
+  font-size: clamp(0.875rem, 0.8rem + 0.375vw, 1rem);
+}
+
+.text-fluid-base {
+  font-size: clamp(1rem, 0.9rem + 0.5vw, 1.125rem);
+}
+
+.text-fluid-lg {
+  font-size: clamp(1.125rem, 1rem + 0.625vw, 1.25rem);
+}
+
+.text-fluid-xl {
+  font-size: clamp(1.25rem, 1.1rem + 0.75vw, 1.5rem);
+}
+
+.text-fluid-2xl {
+  font-size: clamp(1.5rem, 1.3rem + 1vw, 2rem);
+}
+
+.text-fluid-3xl {
+  font-size: clamp(1.875rem, 1.5rem + 1.875vw, 2.25rem);
+}
+
+.text-fluid-4xl {
+  font-size: clamp(2.25rem, 1.8rem + 2.25vw, 3rem);
+}
+
+.text-fluid-5xl {
+  font-size: clamp(3rem, 2.4rem + 3vw, 4rem);
+}
+
+/* Enhanced spacing system */
+.space-y-fluid > * + * {
+  margin-top: clamp(1rem, 0.8rem + 1vw, 2rem);
+}
+
+/* Modern aspect ratios */
+.aspect-golden {
+  aspect-ratio: 1.618 / 1;
+}
+
+.aspect-cinema {
+  aspect-ratio: 21 / 9;
+}
+
+/* Enhanced color mixing */
+.text-mixed {
+  color: color-mix(in srgb, #8b6f47 70%, #ed8936 30%);
+}
+
+.bg-mixed {
+  background-color: color-mix(in srgb, #8b6f47 70%, #ed8936 30%);
+}
+
+/* Custom selection colors */
+::selection {
+  background: rgba(191, 160, 148, 0.2);
+  color: #0f172a;
+}
+
+::-moz-selection {
+  background: rgba(191, 160, 148, 0.2);
+  color: #0f172a;
+}
+
+/* Loading States */
+.loading-spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Interactive Elements */
+.interactive-scale {
+  transition: transform var(--transition);
+}
+
+.interactive-scale:hover {
+  transform: scale(1.02);
+}
+
+.interactive-lift {
+  transition: all var(--transition);
+}
+
+.interactive-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Loading States */
+.skeleton {
+  background: linear-gradient(90deg, var(--gray-200) 25%, var(--gray-100) 50%, var(--gray-200) 75%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 2s infinite;
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Professional borders */
+.border-gradient {
+  border: 2px solid transparent;
+  background: linear-gradient(white, white) padding-box,
+              linear-gradient(135deg, var(--primary-300), var(--secondary-300)) border-box;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #8b6f47, #6f4e37);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #a18072, #8b6f47);
 }

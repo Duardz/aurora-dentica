@@ -4,49 +4,49 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Primary - Professional Medical Blue
+        // Primary - Warm Professional Brown
         primary: {
-          50: '#f0f9ff',
-          100: '#e0f2fe',
-          200: '#bae6fd',
-          300: '#7dd3fc',
-          400: '#38bdf8',
-          500: '#0ea5e9',
-          600: '#0284c7',
-          700: '#0369a1',
-          800: '#075985',
-          900: '#0c4a6e',
-          950: '#082f49',
+          50: '#fdf8f6',
+          100: '#f2e8e5',
+          200: '#eaddd7',
+          300: '#e0cec7',
+          400: '#d2bab0',
+          500: '#bfa094',
+          600: '#a18072',
+          700: '#8b6f47',
+          800: '#723a28',
+          900: '#5d2f1e',
+          950: '#2e1a0f',
         },
-        // Accent - Clean Mint/Medical Green
+        // Accent - Warm Cream/Champagne
         accent: {
-          50: '#ecfdf5',
-          100: '#d1fae5',
-          200: '#a7f3d0',
-          300: '#6ee7b7',
-          400: '#34d399',
-          500: '#10b981',
-          600: '#059669',
-          700: '#047857',
-          800: '#065f46',
-          900: '#064e3b',
-          950: '#022c22',
+          50: '#fffcf7',
+          100: '#fef7e7',
+          200: '#fdecc8',
+          300: '#fbdc9e',
+          400: '#f8c572',
+          500: '#f5ab50',
+          600: '#e68e2e',
+          700: '#c67424',
+          800: '#9f5c23',
+          900: '#824c22',
+          950: '#46260f',
         },
-        // Success - Medical Green (Enhanced)
+        // Success - Warm Forest Green (complements brown)
         success: {
-          50: '#ecfdf5',
-          100: '#d1fae5',
-          200: '#a7f3d0',
-          300: '#6ee7b7',
-          400: '#34d399',
-          500: '#10b981',
-          600: '#059669',
-          700: '#047857',
-          800: '#065f46',
-          900: '#064e3b',
-          950: '#022c22',
+          50: '#f0f9f0',
+          100: '#dcf2dc',
+          200: '#bce5bc',
+          300: '#8fd18f',
+          400: '#5cb85c',
+          500: '#3e9b3e',
+          600: '#2f7d2f',
+          700: '#286428',
+          800: '#235023',
+          900: '#1e421e',
+          950: '#0d240d',
         },
-        // Warning - Medical Orange (Enhanced)
+        // Warning - Warm Golden Orange
         warning: {
           50: '#fffbeb',
           100: '#fef3c7',
@@ -60,50 +60,50 @@ export default {
           900: '#78350f',
           950: '#451a03',
         },
-        // Error/Danger - Medical Red (Enhanced)
+        // Error/Danger - Warm Terracotta Red
         error: {
-          50: '#fef2f2',
-          100: '#fee2e2',
-          200: '#fecaca',
-          300: '#fca5a5',
-          400: '#f87171',
-          500: '#ef4444',
-          600: '#dc2626',
-          700: '#b91c1c',
-          800: '#991b1b',
-          900: '#7f1d1d',
-          950: '#450a0a',
+          50: '#fef6f2',
+          100: '#feeee6',
+          200: '#fcdcc8',
+          300: '#f9c0a0',
+          400: '#f49970',
+          500: '#e07448',
+          600: '#c85a30',
+          700: '#a84826',
+          800: '#8a3e24',
+          900: '#723621',
+          950: '#3e1a0f',
         },
-        // Enhanced Gray Scale for Professional Look
+        // Enhanced Warm Gray Scale
         gray: {
-          50: '#f8fafc',
-          100: '#f1f5f9',
-          200: '#e2e8f0',
-          300: '#cbd5e1',
-          400: '#94a3b8',
-          500: '#64748b',
-          600: '#475569',
-          700: '#334155',
-          800: '#1e293b',
-          900: '#0f172a',
-          950: '#020617',
+          50: '#fafaf9',
+          100: '#f5f5f4',
+          200: '#e7e5e4',
+          300: '#d6d3d1',
+          400: '#a8a29e',
+          500: '#78716c',
+          600: '#57534e',
+          700: '#44403c',
+          800: '#292524',
+          900: '#1c1917',
+          950: '#0c0a09',
         },
-        // Dental Theme Specific Colors
+        // Dental Theme Specific Colors - Brown Edition
         dental: {
-          blue: {
-            50: '#f0f9ff',
-            500: '#0ea5e9',
-            600: '#0284c7',
+          brown: {
+            50: '#fdf8f6',
+            500: '#8b6f47',
+            600: '#723a28',
           },
-          mint: {
-            50: '#ecfdf5',
-            500: '#10b981',
-            600: '#059669',
+          cream: {
+            50: '#fffcf7',
+            500: '#f5ab50',
+            600: '#e68e2e',
           },
-          clean: {
-            50: '#f8fafc',
-            100: '#f1f5f9',
-            200: '#e2e8f0',
+          warm: {
+            50: '#fafaf9',
+            100: '#f5f5f4',
+            200: '#e7e5e4',
           }
         }
       },
@@ -162,11 +162,11 @@ export default {
         'card-hover': '0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)',
         'button': '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)',
         'button-hover': '0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)',
-        'dental': '0 20px 25px -5px rgb(14 165 233 / 0.1), 0 10px 10px -5px rgb(14 165 233 / 0.04)',
-        'dental-lg': '0 25px 50px -12px rgb(14 165 233 / 0.25)',
-        'glow': '0 0 20px rgb(14 165 233 / 0.15)',
-        'glow-lg': '0 0 40px rgb(14 165 233 / 0.2)',
-        'inner-glow': 'inset 0 2px 4px 0 rgb(14 165 233 / 0.06)',
+        'dental': '0 20px 25px -5px rgb(139 111 71 / 0.1), 0 10px 10px -5px rgb(139 111 71 / 0.04)',
+        'dental-lg': '0 25px 50px -12px rgb(139 111 71 / 0.25)',
+        'glow': '0 0 20px rgb(139 111 71 / 0.15)',
+        'glow-lg': '0 0 40px rgb(139 111 71 / 0.2)',
+        'inner-glow': 'inset 0 2px 4px 0 rgb(139 111 71 / 0.06)',
       },
       borderRadius: {
         '4xl': '2rem',
@@ -273,10 +273,10 @@ export default {
         },
         glowPulse: {
           '0%': { 
-            boxShadow: '0 0 20px rgb(14 165 233 / 0.15)' 
+            boxShadow: '0 0 20px rgb(139 111 71 / 0.15)' 
           },
           '100%': { 
-            boxShadow: '0 0 40px rgb(14 165 233 / 0.3)' 
+            boxShadow: '0 0 40px rgb(139 111 71 / 0.3)' 
           },
         },
         scaleIn: {
@@ -302,13 +302,13 @@ export default {
         },
       },
       backgroundImage: {
-        'gradient-primary': 'linear-gradient(135deg, #f0f9ff 0%, #ecfdf5 100%)',
-        'gradient-hero': 'linear-gradient(135deg, #f0f9ff 0%, #ecfdf5 25%, #e0f2fe 50%, #d1fae5 75%, #f0f9ff 100%)',
-        'gradient-card': 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)',
-        'gradient-dental': 'linear-gradient(135deg, #0ea5e9 0%, #10b981 100%)',
+        'gradient-primary': 'linear-gradient(135deg, #fdf8f6 0%, #fffcf7 100%)',
+        'gradient-hero': 'linear-gradient(135deg, #fdf8f6 0%, #fffcf7 25%, #f2e8e5 50%, #fef7e7 75%, #fdf8f6 100%)',
+        'gradient-card': 'linear-gradient(135deg, #8b6f47 0%, #723a28 100%)',
+        'gradient-dental': 'linear-gradient(135deg, #8b6f47 0%, #f5ab50 100%)',
         'gradient-radial': 'radial-gradient(ellipse at center, var(--tw-gradient-stops))',
         'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
-        'dental-pattern': 'url("data:image/svg+xml,%3Csvg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="%230ea5e9" fill-opacity="0.05" fill-rule="evenodd"%3E%3Ccircle cx="3" cy="3" r="3"/%3E%3Ccircle cx="13" cy="13" r="3"/%3E%3C/g%3E%3C/svg%3E")',
+        'dental-pattern': 'url("data:image/svg+xml,%3Csvg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="%238b6f47" fill-opacity="0.05" fill-rule="evenodd"%3E%3Ccircle cx="3" cy="3" r="3"/%3E%3Ccircle cx="13" cy="13" r="3"/%3E%3C/g%3E%3C/svg%3E")',
       },
       backdropBlur: {
         'xs': '2px',
@@ -330,8 +330,8 @@ export default {
         '175': '1.75',
       },
       dropShadow: {
-        'dental': '0 4px 6px rgb(14 165 233 / 0.1)',
-        'dental-lg': '0 10px 15px rgb(14 165 233 / 0.15)',
+        'dental': '0 4px 6px rgb(139 111 71 / 0.1)',
+        'dental-lg': '0 10px 15px rgb(139 111 71 / 0.15)',
       },
       grayscale: {
         '50': '0.5',
@@ -457,13 +457,13 @@ export default {
             left: '-50%',
             width: '200%',
             height: '200%',
-            background: 'radial-gradient(circle, rgba(14, 165, 233, 0.1) 0%, transparent 70%)',
+            background: 'radial-gradient(circle, rgba(139, 111, 71, 0.1) 0%, transparent 70%)',
             animation: 'rotate 20s linear infinite',
             pointerEvents: 'none',
           },
         },
         '.text-gradient-dental': {
-          background: 'linear-gradient(135deg, #0ea5e9 0%, #10b981 100%)',
+          background: 'linear-gradient(135deg, #8b6f47 0%, #f5ab50 100%)',
           '-webkit-background-clip': 'text',
           '-webkit-text-fill-color': 'transparent',
           'background-clip': 'text',
@@ -479,7 +479,7 @@ export default {
           border: '1px solid rgba(255, 255, 255, 0.18)',
         },
         '.dental-pattern': {
-          'background-image': 'url("data:image/svg+xml,%3Csvg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="%230ea5e9" fill-opacity="0.05" fill-rule="evenodd"%3E%3Ccircle cx="3" cy="3" r="3"/%3E%3Ccircle cx="13" cy="13" r="3"/%3E%3C/g%3E%3C/svg%3E")',
+          'background-image': 'url("data:image/svg+xml,%3Csvg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="%238b6f47" fill-opacity="0.05" fill-rule="evenodd"%3E%3Ccircle cx="3" cy="3" r="3"/%3E%3Ccircle cx="13" cy="13" r="3"/%3E%3C/g%3E%3C/svg%3E")',
         },
         // Text utilities
         '.text-balance': {
@@ -526,15 +526,15 @@ export default {
         // Focus utilities
         '.focus-ring': {
           '&:focus': {
-            outline: '2px solid #0ea5e9',
+            outline: '2px solid #8b6f47',
             'outline-offset': '2px',
           },
         },
         '.focus-ring-dental': {
           '&:focus': {
-            outline: '2px solid #0ea5e9',
+            outline: '2px solid #8b6f47',
             'outline-offset': '2px',
-            'box-shadow': '0 0 0 4px rgba(14, 165, 233, 0.1)',
+            'box-shadow': '0 0 0 4px rgba(139, 111, 71, 0.1)',
           },
         },
       }
