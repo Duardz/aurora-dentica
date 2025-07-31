@@ -4,49 +4,49 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Primary - Rich Professional Brown (Medical Trust)
+        // Primary - Modern Stone/Brown (Professional & Sophisticated)
         primary: {
-          50: '#faf7f5',
-          100: '#f4efea',
-          200: '#e8ddd4',
-          300: '#d6c4b5',
-          400: '#c1a38f',
-          500: '#a8845f',
-          600: '#8b6d47',
-          700: '#71553a',
-          800: '#5d4630',
-          900: '#4e3a28',
-          950: '#2a1e15',
+          50: '#fafaf9',
+          100: '#f5f5f4',
+          200: '#e7e5e4',
+          300: '#d6d3d1',
+          400: '#a8a29e',
+          500: '#78716c',
+          600: '#57534e',
+          700: '#44403c',
+          800: '#292524',
+          900: '#1c1917',
+          950: '#0c0a09',
         },
         
-        // Secondary - Warm Cream (Clean & Calming)
+        // Secondary - Warm Amber (Energy & Warmth)
         secondary: {
-          50: '#fffef9',
-          100: '#fffbf0',
-          200: '#fef5dc',
-          300: '#fcebba',
-          400: '#f9dc8c',
-          500: '#f5ca5d',
-          600: '#e8b23f',
-          700: '#cc9633',
-          800: '#a6782d',
-          900: '#8a6128',
-          950: '#4a3317',
+          50: '#fffbeb',
+          100: '#fef3c7',
+          200: '#fde68a',
+          300: '#fcd34d',
+          400: '#fbbf24',
+          500: '#f59e0b',
+          600: '#d97706',
+          700: '#b45309',
+          800: '#92400e',
+          900: '#78350f',
+          950: '#451a03',
         },
         
-        // Accent - Sage Green (Health & Nature)
+        // Accent - Rich Orange (Trust & Confidence)
         accent: {
-          50: '#f6f8f6',
-          100: '#e9f1e9',
-          200: '#d5e4d5',
-          300: '#b4d0b4',
-          400: '#8bb58b',
-          500: '#6a9a6a',
-          600: '#527d52',
-          700: '#426442',
-          800: '#385138',
-          900: '#2f432f',
-          950: '#1a251a',
+          50: '#fff7ed',
+          100: '#ffedd5',
+          200: '#fed7aa',
+          300: '#fdba74',
+          400: '#fb923c',
+          500: '#f97316',
+          600: '#ea580c',
+          700: '#c2410c',
+          800: '#9a3412',
+          900: '#7c2d12',
+          950: '#431407',
         },
 
         // Enhanced Status Colors
@@ -93,21 +93,21 @@ export default {
         },
         
         info: {
-          50: '#f0f9ff',
-          100: '#e0f2fe',
-          200: '#bae6fd',
-          300: '#7dd3fc',
-          400: '#38bdf8',
-          500: '#0ea5e9',
-          600: '#0284c7',
-          700: '#0369a1',
-          800: '#075985',
-          900: '#0c4a6e',
-          950: '#082f49',
+          50: '#eff6ff',
+          100: '#dbeafe',
+          200: '#bfdbfe',
+          300: '#93c5fd',
+          400: '#60a5fa',
+          500: '#3b82f6',
+          600: '#2563eb',
+          700: '#1d4ed8',
+          800: '#1e40af',
+          900: '#1e3a8a',
+          950: '#172554',
         },
 
-        // Enhanced Gray Scale (Warmer Tone)
-        gray: {
+        // Professional Gray Scale (Stone-based)
+        stone: {
           50: '#fafaf9',
           100: '#f5f5f4',
           200: '#e7e5e4',
@@ -121,26 +121,69 @@ export default {
           950: '#0c0a09',
         },
 
+        // Modern Amber variants
+        amber: {
+          50: '#fffbeb',
+          100: '#fef3c7',
+          200: '#fde68a',
+          300: '#fcd34d',
+          400: '#fbbf24',
+          500: '#f59e0b',
+          600: '#d97706',
+          700: '#b45309',
+          800: '#92400e',
+          900: '#78350f',
+          950: '#451a03',
+        },
+
+        // Orange variants for accents
+        orange: {
+          50: '#fff7ed',
+          100: '#ffedd5',
+          200: '#fed7aa',
+          300: '#fdba74',
+          400: '#fb923c',
+          500: '#f97316',
+          600: '#ea580c',
+          700: '#c2410c',
+          800: '#9a3412',
+          900: '#7c2d12',
+          950: '#431407',
+        },
+
         // Medical Professional Theme Colors
         medical: {
-          cream: {
-            50: '#fffef9',
-            100: '#fffbf0',
-            200: '#fef5dc',
-            300: '#fcebba',
-            400: '#f9dc8c',
-            500: '#f5ca5d',
+          warm: {
+            50: '#fafaf9',
+            100: '#f5f5f4',
+            200: '#e7e5e4',
+            300: '#d6d3d1',
+            400: '#a8a29e',
+            500: '#78716c',
+            600: '#57534e',
+            700: '#44403c',
+            800: '#292524',
+            900: '#1c1917',
           },
-          brown: {
-            50: '#faf7f5',
-            500: '#a8845f',
-            600: '#8b6d47',
-            700: '#71553a',
+          amber: {
+            50: '#fffbeb',
+            100: '#fef3c7',
+            200: '#fde68a',
+            300: '#fcd34d',
+            400: '#fbbf24',
+            500: '#f59e0b',
+            600: '#d97706',
+            700: '#b45309',
           },
-          sage: {
-            50: '#f6f8f6',
-            500: '#6a9a6a',
-            600: '#527d52',
+          orange: {
+            50: '#fff7ed',
+            100: '#ffedd5',
+            200: '#fed7aa',
+            300: '#fdba74',
+            400: '#fb923c',
+            500: '#f97316',
+            600: '#ea580c',
+            700: '#c2410c',
           },
           trust: {
             50: '#f8fafb',
@@ -219,17 +262,19 @@ export default {
       },
 
       boxShadow: {
-        'card': '0 1px 3px 0 rgb(139 109 71 / 0.1), 0 1px 2px -1px rgb(139 109 71 / 0.1)',
-        'card-hover': '0 10px 15px -3px rgb(139 109 71 / 0.1), 0 4px 6px -4px rgb(139 109 71 / 0.1)',
-        'button': '0 4px 6px -1px rgb(139 109 71 / 0.1), 0 2px 4px -2px rgb(139 109 71 / 0.1)',
-        'button-hover': '0 10px 15px -3px rgb(139 109 71 / 0.1), 0 4px 6px -4px rgb(139 109 71 / 0.1)',
-        'medical': '0 20px 25px -5px rgb(139 109 71 / 0.1), 0 10px 10px -5px rgb(139 109 71 / 0.04)',
-        'medical-lg': '0 25px 50px -12px rgb(139 109 71 / 0.25)',
-        'trust': '0 4px 14px 0 rgb(139 109 71 / 0.08)',
-        'trust-lg': '0 8px 25px 0 rgb(139 109 71 / 0.12)',
-        'glow': '0 0 20px rgb(139 109 71 / 0.15)',
-        'glow-lg': '0 0 40px rgb(139 109 71 / 0.2)',
-        'inner': 'inset 0 2px 4px 0 rgb(139 109 71 / 0.06)',
+        'card': '0 1px 3px 0 rgb(68 64 60 / 0.1), 0 1px 2px -1px rgb(68 64 60 / 0.1)',
+        'card-hover': '0 10px 15px -3px rgb(68 64 60 / 0.1), 0 4px 6px -4px rgb(68 64 60 / 0.1)',
+        'button': '0 4px 6px -1px rgb(68 64 60 / 0.1), 0 2px 4px -2px rgb(68 64 60 / 0.1)',
+        'button-hover': '0 10px 15px -3px rgb(68 64 60 / 0.1), 0 4px 6px -4px rgb(68 64 60 / 0.1)',
+        'medical': '0 20px 25px -5px rgb(68 64 60 / 0.1), 0 10px 10px -5px rgb(68 64 60 / 0.04)',
+        'medical-lg': '0 25px 50px -12px rgb(68 64 60 / 0.25)',
+        'trust': '0 4px 14px 0 rgb(68 64 60 / 0.08)',
+        'trust-lg': '0 8px 25px 0 rgb(68 64 60 / 0.12)',
+        'glow': '0 0 20px rgb(217 119 6 / 0.15)',
+        'glow-lg': '0 0 40px rgb(217 119 6 / 0.2)',
+        'inner': 'inset 0 2px 4px 0 rgb(68 64 60 / 0.06)',
+        'warm': '0 4px 14px 0 rgb(217 119 6 / 0.1)',
+        'warm-lg': '0 20px 25px -5px rgb(217 119 6 / 0.1), 0 10px 10px -5px rgb(217 119 6 / 0.04)',
       },
 
       borderRadius: {
@@ -252,6 +297,7 @@ export default {
         'scale-in': 'scaleIn 0.2s ease-out',
         'medical-shine': 'medicalShine 2s ease-in-out infinite',
         'trust-pulse': 'trustPulse 3s ease-in-out infinite',
+        'warm-glow': 'warmGlow 3s ease-in-out infinite alternate',
       },
 
       keyframes: {
@@ -333,10 +379,10 @@ export default {
         },
         glowPulse: {
           '0%': { 
-            boxShadow: '0 0 20px rgb(139 109 71 / 0.15)' 
+            boxShadow: '0 0 20px rgb(217 119 6 / 0.15)' 
           },
           '100%': { 
-            boxShadow: '0 0 40px rgb(139 109 71 / 0.3)' 
+            boxShadow: '0 0 40px rgb(217 119 6 / 0.3)' 
           },
         },
         scaleIn: {
@@ -370,16 +416,26 @@ export default {
             opacity: '0.9' 
           },
         },
+        warmGlow: {
+          '0%': { 
+            boxShadow: '0 0 20px rgb(217 119 6 / 0.1)' 
+          },
+          '100%': { 
+            boxShadow: '0 0 40px rgb(234 88 12 / 0.2)' 
+          },
+        },
       },
 
       backgroundImage: {
-        'gradient-primary': 'linear-gradient(135deg, #faf7f5 0%, #fffef9 100%)',
-        'gradient-hero': 'linear-gradient(135deg, #faf7f5 0%, #fffef9 25%, #ffffff 50%, #fffef9 75%, #faf7f5 100%)',
-        'gradient-medical': 'linear-gradient(135deg, #8b6d47 0%, #a8845f 100%)',
-        'gradient-trust': 'linear-gradient(135deg, #6a9a6a 0%, #527d52 100%)',
-        'gradient-warm': 'linear-gradient(135deg, #f5ca5d 0%, #e8b23f 100%)',
-        'medical-pattern': 'url("data:image/svg+xml,%3Csvg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="%238b6d47" fill-opacity="0.03" fill-rule="evenodd"%3E%3Ccircle cx="3" cy="3" r="3"/%3E%3Ccircle cx="13" cy="13" r="3"/%3E%3C/g%3E%3C/svg%3E")',
-        'trust-pattern': 'url("data:image/svg+xml,%3Csvg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="%236a9a6a" fill-opacity="0.02" fill-rule="evenodd"%3E%3Cpath d="M20 20c0-5.5-4.5-10-10-10s-10 4.5-10 10 4.5 10 10 10 10-4.5 10-10zm10 0c0-5.5-4.5-10-10-10s-10 4.5-10 10 4.5 10 10 10 10-4.5 10-10z"/%3E%3C/g%3E%3C/svg%3E")',
+        'gradient-primary': 'linear-gradient(135deg, #fafaf9 0%, #fffbeb 100%)',
+        'gradient-hero': 'linear-gradient(135deg, #fafaf9 0%, #fffbeb 25%, #ffffff 50%, #fff7ed 75%, #fafaf9 100%)',
+        'gradient-medical': 'linear-gradient(135deg, #57534e 0%, #78716c 100%)',
+        'gradient-warm': 'linear-gradient(135deg, #d97706 0%, #ea580c 100%)',
+        'gradient-trust': 'linear-gradient(135deg, #475569 0%, #334155 100%)',
+        'gradient-amber': 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
+        'medical-pattern': 'url("data:image/svg+xml,%3Csvg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="%2357534e" fill-opacity="0.03" fill-rule="evenodd"%3E%3Ccircle cx="3" cy="3" r="3"/%3E%3Ccircle cx="13" cy="13" r="3"/%3E%3C/g%3E%3C/svg%3E")',
+        'trust-pattern': 'url("data:image/svg+xml,%3Csvg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="%23475569" fill-opacity="0.02" fill-rule="evenodd"%3E%3Cpath d="M20 20c0-5.5-4.5-10-10-10s-10 4.5-10 10 4.5 10 10 10 10-4.5 10-10zm10 0c0-5.5-4.5-10-10-10s-10 4.5-10 10 4.5 10 10 10 10-4.5 10-10z"/%3E%3C/g%3E%3C/svg%3E")',
+        'warm-pattern': 'url("data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="%23d97706" fill-opacity="0.04" fill-rule="evenodd"%3E%3Ccircle cx="30" cy="30" r="4"/%3E%3Ccircle cx="10" cy="10" r="2"/%3E%3Ccircle cx="50" cy="50" r="2"/%3E%3C/g%3E%3C/svg%3E")',
       },
 
       backdropBlur: {
@@ -413,6 +469,7 @@ export default {
         'medical': 'cubic-bezier(0.4, 0, 0.2, 1)',
         'trust': 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
         'professional': 'cubic-bezier(0.4, 0, 0.6, 1)',
+        'warm': 'cubic-bezier(0.34, 1.56, 0.64, 1)',
       },
 
       transitionDuration: {
@@ -454,7 +511,7 @@ export default {
             left: '-50%',
             width: '200%',
             height: '200%',
-            background: 'radial-gradient(circle, rgba(139, 109, 71, 0.1) 0%, transparent 70%)',
+            background: 'radial-gradient(circle, rgba(68, 64, 60, 0.1) 0%, transparent 70%)',
             animation: 'rotate 20s linear infinite',
             pointerEvents: 'none',
           },
@@ -462,21 +519,28 @@ export default {
         
         // Professional text gradients
         '.text-gradient-medical': {
-          background: 'linear-gradient(135deg, #8b6d47 0%, #a8845f 100%)',
-          '-webkit-background-clip': 'text',
-          '-webkit-text-fill-color': 'transparent',
-          'background-clip': 'text',
-        },
-        
-        '.text-gradient-trust': {
-          background: 'linear-gradient(135deg, #6a9a6a 0%, #527d52 100%)',
+          background: 'linear-gradient(135deg, #57534e 0%, #78716c 100%)',
           '-webkit-background-clip': 'text',
           '-webkit-text-fill-color': 'transparent',
           'background-clip': 'text',
         },
         
         '.text-gradient-warm': {
-          background: 'linear-gradient(135deg, #f5ca5d 0%, #e8b23f 100%)',
+          background: 'linear-gradient(135deg, #d97706 0%, #ea580c 100%)',
+          '-webkit-background-clip': 'text',
+          '-webkit-text-fill-color': 'transparent',
+          'background-clip': 'text',
+        },
+        
+        '.text-gradient-amber': {
+          background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
+          '-webkit-background-clip': 'text',
+          '-webkit-text-fill-color': 'transparent',
+          'background-clip': 'text',
+        },
+        
+        '.text-gradient-trust': {
+          background: 'linear-gradient(135deg, #475569 0%, #334155 100%)',
           '-webkit-background-clip': 'text',
           '-webkit-text-fill-color': 'transparent',
           'background-clip': 'text',
@@ -487,23 +551,34 @@ export default {
           background: 'rgba(255, 255, 255, 0.25)',
           'backdrop-filter': 'blur(10px) saturate(180%)',
           '-webkit-backdrop-filter': 'blur(10px) saturate(180%)',
-          border: '1px solid rgba(139, 109, 71, 0.18)',
+          border: '1px solid rgba(68, 64, 60, 0.18)',
+        },
+        
+        '.glass-warm': {
+          background: 'rgba(255, 255, 255, 0.25)',
+          'backdrop-filter': 'blur(10px) saturate(180%)',
+          '-webkit-backdrop-filter': 'blur(10px) saturate(180%)',
+          border: '1px solid rgba(217, 119, 6, 0.18)',
         },
         
         '.glass-trust': {
           background: 'rgba(255, 255, 255, 0.25)',
           'backdrop-filter': 'blur(10px) saturate(180%)',
           '-webkit-backdrop-filter': 'blur(10px) saturate(180%)',
-          border: '1px solid rgba(106, 154, 106, 0.18)',
+          border: '1px solid rgba(71, 85, 105, 0.18)',
         },
         
         // Professional patterns
         '.pattern-medical': {
-          'background-image': 'url("data:image/svg+xml,%3Csvg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="%238b6d47" fill-opacity="0.03" fill-rule="evenodd"%3E%3Ccircle cx="3" cy="3" r="3"/%3E%3Ccircle cx="13" cy="13" r="3"/%3E%3C/g%3E%3C/svg%3E")',
+          'background-image': 'url("data:image/svg+xml,%3Csvg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="%2357534e" fill-opacity="0.03" fill-rule="evenodd"%3E%3Ccircle cx="3" cy="3" r="3"/%3E%3Ccircle cx="13" cy="13" r="3"/%3E%3C/g%3E%3C/svg%3E")',
+        },
+        
+        '.pattern-warm': {
+          'background-image': 'url("data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="%23d97706" fill-opacity="0.04" fill-rule="evenodd"%3E%3Ccircle cx="30" cy="30" r="4"/%3E%3Ccircle cx="10" cy="10" r="2"/%3E%3Ccircle cx="50" cy="50" r="2"/%3E%3C/g%3E%3C/svg%3E")',
         },
         
         '.pattern-trust': {
-          'background-image': 'url("data:image/svg+xml,%3Csvg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="%236a9a6a" fill-opacity="0.02" fill-rule="evenodd"%3E%3Cpath d="M20 20c0-5.5-4.5-10-10-10s-10 4.5-10 10 4.5 10 10 10 10-4.5 10-10zm10 0c0-5.5-4.5-10-10-10s-10 4.5-10 10 4.5 10 10 10 10-4.5 10-10z"/%3E%3C/g%3E%3C/svg%3E")',
+          'background-image': 'url("data:image/svg+xml,%3Csvg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="%23475569" fill-opacity="0.02" fill-rule="evenodd"%3E%3Cpath d="M20 20c0-5.5-4.5-10-10-10s-10 4.5-10 10 4.5 10 10 10 10-4.5 10-10zm10 0c0-5.5-4.5-10-10-10s-10 4.5-10 10 4.5 10 10 10 10-4.5 10-10z"/%3E%3C/g%3E%3C/svg%3E")',
         },
         
         // Text utilities
@@ -540,7 +615,7 @@ export default {
         // Scrollbar utilities
         '.scrollbar-thin': {
           'scrollbar-width': 'thin',
-          'scrollbar-color': 'rgb(139 109 71 / 0.3) rgb(250 247 245)',
+          'scrollbar-color': 'rgb(68 64 60 / 0.3) rgb(250 250 249)',
         },
         
         '.scrollbar-none': {
@@ -553,17 +628,25 @@ export default {
         // Professional focus utilities
         '.focus-ring-medical': {
           '&:focus': {
-            outline: '2px solid #8b6d47',
+            outline: '2px solid #57534e',
             'outline-offset': '2px',
-            'box-shadow': '0 0 0 4px rgba(139, 109, 71, 0.1)',
+            'box-shadow': '0 0 0 4px rgba(68, 64, 60, 0.1)',
+          },
+        },
+        
+        '.focus-ring-warm': {
+          '&:focus': {
+            outline: '2px solid #d97706',
+            'outline-offset': '2px',
+            'box-shadow': '0 0 0 4px rgba(217, 119, 6, 0.1)',
           },
         },
         
         '.focus-ring-trust': {
           '&:focus': {
-            outline: '2px solid #6a9a6a',
+            outline: '2px solid #475569',
             'outline-offset': '2px',
-            'box-shadow': '0 0 0 4px rgba(106, 154, 106, 0.1)',
+            'box-shadow': '0 0 0 4px rgba(71, 85, 105, 0.1)',
           },
         },
       }
@@ -571,34 +654,50 @@ export default {
       const newComponents = {
         // Professional button components
         '.btn-medical': {
-          background: 'linear-gradient(135deg, #8b6d47 0%, #71553a 100%)',
+          background: 'linear-gradient(135deg, #57534e 0%, #44403c 100%)',
           color: 'white',
           padding: '1rem 2rem',
           borderRadius: '1rem',
           fontWeight: '600',
           transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
-          boxShadow: '0 4px 6px -1px rgb(139 109 71 / 0.1), 0 2px 4px -2px rgb(139 109 71 / 0.1)',
+          boxShadow: '0 4px 6px -1px rgb(68 64 60 / 0.1), 0 2px 4px -2px rgb(68 64 60 / 0.1)',
           
           '&:hover': {
-            background: 'linear-gradient(135deg, #71553a 0%, #5d4630 100%)',
+            background: 'linear-gradient(135deg, #44403c 0%, #292524 100%)',
             transform: 'translateY(-2px)',
-            boxShadow: '0 10px 15px -3px rgb(139 109 71 / 0.1), 0 4px 6px -4px rgb(139 109 71 / 0.1)',
+            boxShadow: '0 10px 15px -3px rgb(68 64 60 / 0.1), 0 4px 6px -4px rgb(68 64 60 / 0.1)',
+          },
+        },
+        
+        '.btn-warm': {
+          background: 'linear-gradient(135deg, #d97706 0%, #ea580c 100%)',
+          color: 'white',
+          padding: '1rem 2rem',
+          borderRadius: '1rem',
+          fontWeight: '600',
+          transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
+          boxShadow: '0 4px 6px -1px rgb(217 119 6 / 0.1), 0 2px 4px -2px rgb(217 119 6 / 0.1)',
+          
+          '&:hover': {
+            background: 'linear-gradient(135deg, #ea580c 0%, #c2410c 100%)',
+            transform: 'translateY(-2px)',
+            boxShadow: '0 10px 15px -3px rgb(217 119 6 / 0.1), 0 4px 6px -4px rgb(217 119 6 / 0.1)',
           },
         },
         
         '.btn-trust': {
-          background: 'linear-gradient(135deg, #6a9a6a 0%, #527d52 100%)',
+          background: 'linear-gradient(135deg, #475569 0%, #334155 100%)',
           color: 'white',
           padding: '1rem 2rem',
           borderRadius: '1rem',
           fontWeight: '600',
           transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
-          boxShadow: '0 4px 6px -1px rgb(106 154 106 / 0.1), 0 2px 4px -2px rgb(106 154 106 / 0.1)',
+          boxShadow: '0 4px 6px -1px rgb(71 85 105 / 0.1), 0 2px 4px -2px rgb(71 85 105 / 0.1)',
           
           '&:hover': {
-            background: 'linear-gradient(135deg, #527d52 0%, #426442 100%)',
+            background: 'linear-gradient(135deg, #334155 0%, #1e293b 100%)',
             transform: 'translateY(-2px)',
-            boxShadow: '0 10px 15px -3px rgb(106 154 106 / 0.1), 0 4px 6px -4px rgb(106 154 106 / 0.1)',
+            boxShadow: '0 10px 15px -3px rgb(71 85 105 / 0.1), 0 4px 6px -4px rgb(71 85 105 / 0.1)',
           },
         },
         
@@ -606,29 +705,45 @@ export default {
         '.card-medical': {
           background: 'white',
           borderRadius: '1.5rem',
-          boxShadow: '0 1px 3px 0 rgb(139 109 71 / 0.1), 0 1px 2px -1px rgb(139 109 71 / 0.1)',
-          border: '1px solid rgb(250 247 245)',
+          boxShadow: '0 1px 3px 0 rgb(68 64 60 / 0.1), 0 1px 2px -1px rgb(68 64 60 / 0.1)',
+          border: '1px solid rgb(250 250 249)',
           transition: 'all 0.35s cubic-bezier(0.4, 0, 0.2, 1)',
           
           '&:hover': {
             transform: 'translateY(-4px)',
-            boxShadow: '0 20px 25px -5px rgb(139 109 71 / 0.1), 0 10px 10px -5px rgb(139 109 71 / 0.04)',
-            borderColor: 'rgb(232 221 212)',
+            boxShadow: '0 20px 25px -5px rgb(68 64 60 / 0.1), 0 10px 10px -5px rgb(68 64 60 / 0.04)',
+            borderColor: 'rgb(231 229 228)',
+          },
+        },
+        
+        '.card-warm': {
+          background: 'rgba(255, 255, 255, 0.95)',
+          borderRadius: '1.5rem',
+          boxShadow: '0 1px 3px 0 rgb(217 119 6 / 0.1), 0 1px 2px -1px rgb(217 119 6 / 0.1)',
+          border: '1px solid rgb(255 251 235)',
+          transition: 'all 0.35s cubic-bezier(0.4, 0, 0.2, 1)',
+          backdropFilter: 'blur(10px)',
+          
+          '&:hover': {
+            transform: 'translateY(-4px)',
+            boxShadow: '0 20px 25px -5px rgb(217 119 6 / 0.1), 0 10px 10px -5px rgb(217 119 6 / 0.04)',
+            borderColor: 'rgb(254 215 170)',
+            background: 'rgba(255, 255, 255, 1)',
           },
         },
         
         '.card-trust': {
           background: 'rgba(255, 255, 255, 0.95)',
           borderRadius: '1.5rem',
-          boxShadow: '0 1px 3px 0 rgb(106 154 106 / 0.1), 0 1px 2px -1px rgb(106 154 106 / 0.1)',
-          border: '1px solid rgb(246 248 246)',
+          boxShadow: '0 1px 3px 0 rgb(71 85 105 / 0.1), 0 1px 2px -1px rgb(71 85 105 / 0.1)',
+          border: '1px solid rgb(248 250 252)',
           transition: 'all 0.35s cubic-bezier(0.4, 0, 0.2, 1)',
           backdropFilter: 'blur(10px)',
           
           '&:hover': {
             transform: 'translateY(-4px)',
-            boxShadow: '0 20px 25px -5px rgb(106 154 106 / 0.1), 0 10px 10px -5px rgb(106 154 106 / 0.04)',
-            borderColor: 'rgb(213 228 213)',
+            boxShadow: '0 20px 25px -5px rgb(71 85 105 / 0.1), 0 10px 10px -5px rgb(71 85 105 / 0.04)',
+            borderColor: 'rgb(203 213 225)',
             background: 'rgba(255, 255, 255, 1)',
           },
         },
