@@ -169,81 +169,28 @@
 
 <Navigation />
 
-<!-- Hero Section - Enhanced Background Design -->
-<section class="relative min-h-screen flex items-center overflow-hidden">
+<!-- Hero Section - COMPLETELY REDESIGNED Mobile-First -->
+<section class="relative min-h-screen flex items-center overflow-hidden bg-gradient-to-br from-stone-50 via-white to-amber-50/30">
   
-  <!-- Multi-layered Background -->
+  <!-- Simplified Background Elements -->
   <div class="absolute inset-0">
-    <!-- Base Gradient -->
-    <div class="absolute inset-0 bg-gradient-to-br from-stone-50 via-white to-amber-50/40"></div>
-    
-    <!-- Animated Geometric Patterns -->
-    <div class="absolute inset-0">
-      <!-- Large Circles -->
-      <div class="absolute top-20 -left-20 w-96 h-96 bg-gradient-to-br from-amber-300/15 to-orange-400/15 rounded-full blur-3xl animate-pulse"></div>
-      <div class="absolute bottom-20 -right-32 w-[500px] h-[500px] bg-gradient-to-br from-stone-400/10 to-amber-500/15 rounded-full blur-3xl animate-pulse" style="animation-delay: 2s;"></div>
-      <div class="absolute top-1/3 right-1/4 w-64 h-64 bg-gradient-to-r from-orange-200/15 to-amber-300/15 rounded-full blur-2xl animate-float"></div>
-      
-      <!-- Medium Circles -->
-      <div class="absolute top-1/2 left-1/4 w-48 h-48 bg-gradient-to-br from-amber-400/10 to-orange-300/10 rounded-full blur-2xl animate-pulse" style="animation-delay: 1s;"></div>
-      <div class="absolute bottom-1/3 left-1/2 w-32 h-32 bg-gradient-to-r from-stone-300/15 to-amber-200/15 rounded-full blur-xl animate-float" style="animation-delay: 3s;"></div>
-    </div>
-    
-    <!-- Animated Grid Pattern -->
-    <div class="absolute inset-0 opacity-[0.03]">
-      <div class="absolute inset-0 bg-[radial-gradient(circle_at_2px_2px,_#44403c_2px,_transparent_0)] bg-[length:40px_40px] animate-pulse"></div>
-    </div>
-    
-    <!-- Floating Elements -->
-    <div class="absolute inset-0">
-      <!-- Top Wave -->
-      <div class="absolute top-0 left-0 w-full h-32">
-        <svg viewBox="0 0 1440 120" class="w-full h-full text-amber-100/30 animate-pulse">
-          <path fill="currentColor" d="M0,32L48,37.3C96,43,192,53,288,58.7C384,64,480,64,576,58.7C672,53,768,43,864,48C960,53,1056,75,1152,80C1248,85,1344,75,1392,69.3L1440,64L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"></path>
-        </svg>
-      </div>
-      
-      <!-- Bottom Wave -->
-      <div class="absolute bottom-0 left-0 w-full h-32 rotate-180">
-        <svg viewBox="0 0 1440 120" class="w-full h-full text-stone-100/20 animate-pulse" style="animation-delay: 1.5s;">
-          <path fill="currentColor" d="M0,32L48,37.3C96,43,192,53,288,58.7C384,64,480,64,576,58.7C672,53,768,43,864,48C960,53,1056,75,1152,80C1248,85,1344,75,1392,69.3L1440,64L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"></path>
-        </svg>
-      </div>
-      
-      <!-- Diagonal Lines -->
-      <div class="absolute top-1/4 left-0 w-full h-px bg-gradient-to-r from-transparent via-amber-300/20 to-transparent animate-pulse"></div>
-      <div class="absolute top-2/3 right-0 w-full h-px bg-gradient-to-l from-transparent via-orange-300/20 to-transparent animate-pulse" style="animation-delay: 2s;"></div>
-      
-      <!-- Floating Dots -->
-      <div class="absolute top-1/6 left-1/6 w-3 h-3 bg-amber-400/30 rounded-full animate-bounce"></div>
-      <div class="absolute top-2/3 right-1/4 w-2 h-2 bg-orange-400/30 rounded-full animate-bounce" style="animation-delay: 1s;"></div>
-      <div class="absolute bottom-1/4 left-3/4 w-4 h-4 bg-stone-400/20 rounded-full animate-bounce" style="animation-delay: 2s;"></div>
-      
-      <!-- Hexagon Patterns -->
-      <div class="absolute top-20 right-20 opacity-10">
-        <svg width="60" height="60" viewBox="0 0 60 60" class="text-amber-600 animate-spin" style="animation-duration: 20s;">
-          <polygon points="30,5 50,17 50,43 30,55 10,43 10,17" fill="none" stroke="currentColor" stroke-width="1"/>
-        </svg>
-      </div>
-      <div class="absolute bottom-32 left-16 opacity-10">
-        <svg width="40" height="40" viewBox="0 0 40 40" class="text-orange-600 animate-spin" style="animation-duration: 15s; animation-direction: reverse;">
-          <polygon points="20,3 33,11 33,29 20,37 7,29 7,11" fill="none" stroke="currentColor" stroke-width="1"/>
-        </svg>
-      </div>
-    </div>
-    
-    <!-- Overlay for better text contrast -->
-    <div class="absolute inset-0 bg-gradient-to-b from-white/10 via-transparent to-white/5"></div>
+    <!-- Subtle animated circles -->
+    <div class="absolute top-20 left-10 w-72 h-72 bg-gradient-to-br from-amber-200/20 to-orange-200/20 rounded-full blur-3xl animate-pulse"></div>
+    <div class="absolute bottom-20 right-10 w-96 h-96 bg-gradient-to-br from-stone-200/15 to-amber-200/15 rounded-full blur-3xl animate-pulse" style="animation-delay: 2s;"></div>
+    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-gradient-to-r from-orange-100/10 to-amber-100/10 rounded-full blur-2xl animate-float"></div>
   </div>
 
-  <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 z-10">
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-center min-h-[80vh]">
+  <!-- COMPLETELY NEW LAYOUT - Mobile First -->
+  <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20 z-10">
+    
+    <!-- Mobile: Single Column Layout, Desktop: Two Column -->
+    <div class="space-y-12 lg:space-y-0">
       
-      <!-- Content Column - Enhanced Mobile First -->
-      <div class="lg:col-span-7 xl:col-span-6 text-center lg:text-left space-y-6 lg:space-y-8 observe-animation opacity-0 translate-y-8 transition-all duration-1000">
+      <!-- HEADER SECTION - Always Centered -->
+      <div class="text-center space-y-6 lg:space-y-8 observe-animation opacity-0 translate-y-8 transition-all duration-1000">
         
-        <!-- Trust Badge - Redesigned -->
-        <div class="inline-flex items-center gap-3 bg-white/80 backdrop-blur-md px-4 py-2 lg:px-6 lg:py-3 rounded-full shadow-lg border border-amber-200/50 hover:shadow-xl transition-all duration-500 group">
+        <!-- Trust Badge -->
+        <div class="inline-flex items-center gap-3 bg-white/90 backdrop-blur-md px-4 py-2 lg:px-6 lg:py-3 rounded-full shadow-lg border border-amber-200/50 hover:shadow-xl transition-all duration-500 group">
           <div class="relative">
             <div class="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
             <div class="absolute inset-0 w-3 h-3 bg-green-500 rounded-full animate-ping opacity-30"></div>
@@ -251,30 +198,30 @@
           <span class="font-semibold text-stone-700 text-sm lg:text-base group-hover:text-amber-700 transition-colors">Dingalan's Premier Dental Practice Since 2009</span>
         </div>
         
-        <!-- Main Headline - Fixed Spacing -->
+        <!-- Main Headline -->
         <div class="space-y-4 lg:space-y-6">
           <h1 class="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold leading-[1.1] tracking-tight">
             <span class="block text-stone-900 mb-2">Excellence in</span>
             <span class="block bg-gradient-to-r from-amber-700 via-orange-700 to-amber-800 bg-clip-text text-transparent relative">
               Dental Care
               <!-- Accent Line -->
-              <div class="absolute -bottom-2 left-0 lg:left-0 w-16 lg:w-24 h-1 bg-gradient-to-r from-amber-600 to-orange-600 rounded-full mx-auto lg:mx-0"></div>
+              <div class="absolute -bottom-2 left-1/2 transform -translate-x-1/2 lg:left-1/2 lg:transform lg:-translate-x-1/2 w-16 lg:w-24 h-1 bg-gradient-to-r from-amber-600 to-orange-600 rounded-full"></div>
             </span>
           </h1>
         </div>
         
-        <!-- Subtitle - Better Readability -->
-        <p class="text-lg sm:text-xl lg:text-2xl text-stone-600 leading-relaxed max-w-2xl mx-auto lg:mx-0 font-medium">
+        <!-- Subtitle -->
+        <p class="text-lg sm:text-xl lg:text-2xl text-stone-600 leading-relaxed max-w-4xl mx-auto font-medium">
           Experience comprehensive dental care with our team of qualified professionals in 
           <span class="text-amber-700 font-semibold">Dingalan, Aurora</span>. 
           We combine advanced technology with personalized treatment for optimal oral health.
         </p>
         
-        <!-- CTA Buttons - Enhanced Mobile Design -->
-        <div class="flex flex-col sm:flex-row gap-4 lg:gap-6 pt-4 lg:pt-6">
+        <!-- CTA Buttons -->
+        <div class="flex flex-col sm:flex-row gap-4 lg:gap-6 pt-4 lg:pt-6 justify-center">
           <a 
             href="/contact" 
-            class="group relative overflow-hidden bg-gradient-to-r from-amber-700 via-orange-700 to-amber-800 text-white px-6 py-3 lg:px-8 lg:py-4 rounded-2xl font-semibold text-base lg:text-lg transition-all duration-500 hover:shadow-2xl hover:scale-105 flex items-center justify-center gap-3 min-h-[56px]"
+            class="group relative overflow-hidden bg-gradient-to-r from-amber-700 via-orange-700 to-amber-800 text-white px-6 py-3 lg:px-8 lg:py-4 rounded-2xl font-semibold text-base lg:text-lg transition-all duration-500 hover:shadow-2xl hover:scale-105 flex items-center justify-center gap-3 min-h-[56px] max-w-sm mx-auto sm:max-w-none sm:mx-0"
           >
             <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
             <svg class="relative w-5 h-5 lg:w-6 lg:h-6 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -284,7 +231,7 @@
           </a>
           <a 
             href="#services" 
-            class="group bg-white/80 backdrop-blur-md text-stone-700 border-2 border-stone-200 px-6 py-3 lg:px-8 lg:py-4 rounded-2xl font-semibold text-base lg:text-lg transition-all duration-500 hover:bg-white hover:shadow-xl hover:scale-105 hover:border-amber-300 flex items-center justify-center gap-3 min-h-[56px]"
+            class="group bg-white/90 backdrop-blur-md text-stone-700 border-2 border-stone-200 px-6 py-3 lg:px-8 lg:py-4 rounded-2xl font-semibold text-base lg:text-lg transition-all duration-500 hover:bg-white hover:shadow-xl hover:scale-105 hover:border-amber-300 flex items-center justify-center gap-3 min-h-[56px] max-w-sm mx-auto sm:max-w-none sm:mx-0"
           >
             <svg class="w-5 h-5 lg:w-6 lg:h-6 group-hover:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
@@ -292,94 +239,131 @@
             <span>Explore Services</span>
           </a>
         </div>
-        
-        <!-- Stats - Mobile Optimized Grid -->
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-6 pt-8 lg:pt-12">
-          {#each stats as stat, index}
-            <div class="group text-center transform transition-all duration-500 hover:scale-105" style="animation-delay: {index * 150}ms;">
-              <div class="bg-white/90 backdrop-blur-md rounded-xl lg:rounded-2xl p-4 lg:p-6 shadow-lg border border-stone-200/50 hover:shadow-xl hover:border-amber-200 transition-all duration-500 relative overflow-hidden">
-                <!-- Hover Effect -->
-                <div class="absolute inset-0 bg-gradient-to-br from-amber-50/50 to-orange-50/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                
-                <div class="relative z-10">
-                  <div class="text-xl lg:text-2xl mb-2">{stat.icon}</div>
-                  <div class="text-2xl lg:text-3xl font-bold text-stone-900 mb-1">{stat.number}</div>
-                  <div class="text-xs lg:text-sm font-semibold text-stone-600 mb-1">{stat.label}</div>
-                  <div class="text-xs text-stone-500 hidden lg:block">{stat.description}</div>
-                </div>
-              </div>
-            </div>
-          {/each}
-        </div>
       </div>
-      
-      <!-- Visual Column - Fixed Mobile Centering -->
-      <div class="lg:col-span-5 xl:col-span-6 w-full flex justify-center lg:justify-start mt-8 lg:mt-0 observe-animation opacity-0 translate-x-8 transition-all duration-1000" style="animation-delay: 300ms;">
-        <div class="w-full max-w-sm sm:max-w-md lg:max-w-none">
-          
-          <!-- Main Feature Card - Perfectly Centered -->
-          <div class="bg-white/95 backdrop-blur-md rounded-2xl lg:rounded-3xl p-4 sm:p-5 lg:p-8 shadow-2xl border border-stone-200/50 relative overflow-hidden group hover:shadow-3xl transition-all duration-700 w-full">
-            
-            <!-- Background Animation -->
-            <div class="absolute inset-0 bg-gradient-to-br from-amber-50/30 to-orange-50/30 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
-            
-            <!-- Header - Center Aligned -->
-            <div class="text-center mb-4 lg:mb-8 relative z-10">
-              <div class="w-12 h-12 sm:w-14 sm:h-14 lg:w-20 lg:h-20 bg-gradient-to-r from-amber-700 to-orange-700 rounded-2xl lg:rounded-3xl mx-auto mb-2 sm:mb-3 lg:mb-6 flex items-center justify-center shadow-2xl group-hover:scale-110 group-hover:rotate-6 transition-all duration-500">
-                <svg class="w-6 h-6 sm:w-7 sm:h-7 lg:w-10 lg:h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                </svg>
-              </div>
-              <h3 class="text-base sm:text-lg lg:text-3xl font-bold text-stone-900 mb-1 lg:mb-3 leading-tight">Professional Excellence</h3>
-              <p class="text-stone-600 text-xs sm:text-sm lg:text-lg leading-tight">Trusted by thousands of Aurora families</p>
-            </div>
-            
-            <!-- Features Grid - Better Mobile Layout -->
-            <div class="space-y-2 lg:space-y-4 mb-4 lg:mb-8 relative z-10">
-              {#each [
-                { text: 'Licensed Dental Professionals', color: 'text-amber-700', bg: 'bg-amber-50' },
-                { text: 'Advanced Technology', color: 'text-orange-700', bg: 'bg-orange-50' },
-                { text: 'Sterilization Protocols', color: 'text-stone-700', bg: 'bg-stone-50' },
-                { text: 'Patient-Centered Care', color: 'text-amber-600', bg: 'bg-amber-50' }
-              ] as feature, index}
-                <div class="flex items-center gap-2 lg:gap-4 p-2 sm:p-2.5 lg:p-4 {feature.bg} rounded-lg lg:rounded-2xl border border-stone-200/50 hover:shadow-md transition-all duration-500 group/item transform hover:scale-102" style="animation-delay: {index * 100}ms;">
-                  <div class="w-7 h-7 sm:w-8 sm:h-8 lg:w-12 lg:h-12 bg-white rounded-lg lg:rounded-2xl shadow-md flex items-center justify-center group-hover/item:scale-110 transition-transform duration-300 flex-shrink-0">
-                    <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 lg:w-6 lg:h-6 {feature.color}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                    </svg>
-                  </div>
-                  <span class="font-semibold {feature.color} text-xs sm:text-xs lg:text-lg leading-tight">{feature.text}</span>
+
+      <!-- MAIN CONTENT GRID - Responsive Layout -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-start">
+        
+        <!-- LEFT: Professional Excellence Card - PERFECTLY CENTERED -->
+        <div class="lg:col-span-5 flex justify-center observe-animation opacity-0 translate-y-8 transition-all duration-1000" style="animation-delay: 300ms;">
+          <div class="w-full max-w-md">
+            <div class="bg-white/95 backdrop-blur-md rounded-2xl lg:rounded-3xl p-6 lg:p-8 shadow-2xl border border-stone-200/50 relative overflow-hidden group hover:shadow-3xl transition-all duration-700">
+              
+              <!-- Background Animation -->
+              <div class="absolute inset-0 bg-gradient-to-br from-amber-50/30 to-orange-50/30 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+              
+              <!-- Header - CENTERED -->
+              <div class="text-center mb-6 relative z-10">
+                <div class="w-16 h-16 lg:w-20 lg:h-20 bg-gradient-to-r from-amber-700 to-orange-700 rounded-2xl lg:rounded-3xl mx-auto mb-4 lg:mb-6 flex items-center justify-center shadow-2xl group-hover:scale-110 group-hover:rotate-6 transition-all duration-500">
+                  <svg class="w-8 h-8 lg:w-10 lg:h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                  </svg>
                 </div>
-              {/each}
-            </div>
-            
-            <!-- Trust Indicators Grid - Better Mobile Sizing -->
-            <div class="grid grid-cols-2 gap-2 lg:gap-4 relative z-10">
-              <div class="text-center p-2 sm:p-2.5 lg:p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg lg:rounded-2xl border border-green-200/50 transform hover:scale-105 transition-transform duration-300">
-                <div class="text-lg sm:text-xl lg:text-3xl font-bold text-green-700 mb-0.5 lg:mb-1">98%</div>
-                <div class="text-xs lg:text-sm text-green-600 font-medium leading-tight">Patient Satisfaction</div>
+                <h3 class="text-xl lg:text-2xl font-bold text-stone-900 mb-3 leading-tight">Professional Excellence</h3>
+                <p class="text-stone-600 text-sm lg:text-base leading-tight">Trusted by thousands of Aurora families</p>
               </div>
-              <div class="text-center p-2 sm:p-2.5 lg:p-4 bg-gradient-to-r from-amber-50 to-orange-50 rounded-lg lg:rounded-2xl border border-amber-200/50 transform hover:scale-105 transition-transform duration-300">
-                <div class="text-lg sm:text-xl lg:text-3xl font-bold text-amber-700 mb-0.5 lg:mb-1">15+</div>
-                <div class="text-xs lg:text-sm text-amber-600 font-medium leading-tight">Years Experience</div>
+              
+              <!-- Features List - CENTERED Mobile Layout -->
+              <div class="space-y-3 lg:space-y-4 mb-6 relative z-10">
+                {#each [
+                  { text: 'Licensed Dental Professionals', color: 'text-amber-700', bg: 'bg-amber-50' },
+                  { text: 'Advanced Technology', color: 'text-orange-700', bg: 'bg-orange-50' },
+                  { text: 'Sterilization Protocols', color: 'text-stone-700', bg: 'bg-stone-50' },
+                  { text: 'Patient-Centered Care', color: 'text-amber-600', bg: 'bg-amber-50' }
+                ] as feature, index}
+                  <div class="flex items-center gap-3 lg:gap-4 p-3 lg:p-4 {feature.bg} rounded-xl lg:rounded-2xl border border-stone-200/50 hover:shadow-md transition-all duration-500 group/item transform hover:scale-102" style="animation-delay: {index * 100}ms;">
+                    <div class="w-8 h-8 lg:w-12 lg:h-12 bg-white rounded-lg lg:rounded-2xl shadow-md flex items-center justify-center group-hover/item:scale-110 transition-transform duration-300 flex-shrink-0">
+                      <svg class="w-4 h-4 lg:w-6 lg:h-6 {feature.color}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                      </svg>
+                    </div>
+                    <span class="font-semibold {feature.color} text-sm lg:text-base leading-tight">{feature.text}</span>
+                  </div>
+                {/each}
+              </div>
+              
+              <!-- Trust Indicators Grid - CENTERED -->
+              <div class="grid grid-cols-2 gap-3 lg:gap-4 relative z-10">
+                <div class="text-center p-3 lg:p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl lg:rounded-2xl border border-green-200/50 transform hover:scale-105 transition-transform duration-300">
+                  <div class="text-2xl lg:text-3xl font-bold text-green-700 mb-1">98%</div>
+                  <div class="text-xs lg:text-sm text-green-600 font-medium leading-tight">Patient Satisfaction</div>
+                </div>
+                <div class="text-center p-3 lg:p-4 bg-gradient-to-r from-amber-50 to-orange-50 rounded-xl lg:rounded-2xl border border-amber-200/50 transform hover:scale-105 transition-transform duration-300">
+                  <div class="text-2xl lg:text-3xl font-bold text-amber-700 mb-1">15+</div>
+                  <div class="text-xs lg:text-sm text-amber-600 font-medium leading-tight">Years Experience</div>
+                </div>
               </div>
             </div>
           </div>
+        </div>
 
-          <!-- Floating Elements - Hidden on Mobile for Performance -->
-          <div class="hidden lg:block">
-            <!-- Success Badge -->
-            <div class="absolute -top-4 -right-4 xl:-top-6 xl:-right-6 w-20 h-20 xl:w-24 xl:h-24 bg-gradient-to-r from-amber-600 to-orange-600 rounded-2xl flex items-center justify-center text-white shadow-xl animate-bounce">
-              <svg class="w-10 h-10 xl:w-12 xl:h-12" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-              </svg>
-            </div>
-            
-            <!-- Schedule Badge -->
-            <div class="absolute -bottom-4 -left-4 xl:-bottom-6 xl:-left-6 w-16 h-16 xl:w-20 xl:h-20 bg-gradient-to-r from-green-600 to-emerald-600 rounded-2xl flex items-center justify-center text-white shadow-xl animate-pulse">
-              <svg class="w-6 h-6 xl:w-8 xl:h-8" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.1 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"/>
-              </svg>
+        <!-- RIGHT: Statistics Grid - PERFECTLY CENTERED -->
+        <div class="lg:col-span-7 observe-animation opacity-0 translate-y-8 transition-all duration-1000" style="animation-delay: 600ms;">
+          
+          <!-- Stats Grid - Mobile Optimized -->
+          <div class="grid grid-cols-2 lg:grid-cols-2 gap-4 lg:gap-6 max-w-2xl mx-auto">
+            {#each stats as stat, index}
+              <div class="group text-center transform transition-all duration-500 hover:scale-105" style="animation-delay: {(index + 4) * 150}ms;">
+                <div class="bg-white/95 backdrop-blur-md rounded-2xl lg:rounded-3xl p-6 lg:p-8 shadow-xl border border-stone-200/50 hover:shadow-2xl hover:border-amber-200 transition-all duration-500 relative overflow-hidden">
+                  
+                  <!-- Hover Effect -->
+                  <div class="absolute inset-0 bg-gradient-to-br from-amber-50/50 to-orange-50/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  
+                  <div class="relative z-10 space-y-3">
+                    <div class="text-4xl lg:text-5xl mb-3">{stat.icon}</div>
+                    <div class="text-3xl lg:text-4xl font-bold text-stone-900">{stat.number}</div>
+                    <div class="text-sm lg:text-base font-semibold text-stone-600">{stat.label}</div>
+                    <div class="text-xs lg:text-sm text-stone-500">{stat.description}</div>
+                  </div>
+                </div>
+              </div>
+            {/each}
+          </div>
+
+          <!-- Call-to-Action Section -->
+          <div class="mt-8 lg:mt-12 text-center">
+            <div class="bg-gradient-to-r from-amber-700 via-orange-700 to-red-700 rounded-2xl lg:rounded-3xl p-6 lg:p-8 text-white shadow-2xl relative overflow-hidden max-w-2xl mx-auto">
+              
+              <!-- Background Effects -->
+              <div class="absolute inset-0 opacity-20">
+                <div class="absolute top-2 right-2 w-16 h-16 bg-white rounded-full blur-2xl animate-pulse"></div>
+                <div class="absolute bottom-2 left-2 w-12 h-12 bg-white rounded-full blur-xl animate-pulse" style="animation-delay: 1s;"></div>
+              </div>
+              
+              <div class="relative z-10 space-y-4">
+                <div class="w-12 h-12 lg:w-16 lg:h-16 bg-white/20 backdrop-blur-sm rounded-xl lg:rounded-2xl mx-auto flex items-center justify-center border border-white/30">
+                  <svg class="w-6 h-6 lg:w-8 lg:h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3a1 1 0 012 0v4h4a1 1 0 110 2h-4v4a1 1 0 11-2 0v-4H4a1 1 0 110-2h4z"/>
+                  </svg>
+                </div>
+                
+                <h3 class="text-xl lg:text-2xl font-bold">Ready for Excellence?</h3>
+                
+                <p class="text-orange-100 text-sm lg:text-base leading-relaxed">
+                  Join thousands of satisfied patients who trust Aurora Dentica for their dental care needs.
+                </p>
+                
+                <div class="flex flex-col sm:flex-row gap-3 justify-center pt-2">
+                  <a 
+                    href="/contact" 
+                    class="inline-flex items-center gap-2 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white px-4 py-2 lg:px-6 lg:py-3 rounded-xl font-semibold transition-all duration-300 border border-white/30 hover:scale-105"
+                  >
+                    <svg class="w-4 h-4 lg:w-5 lg:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+                    </svg>
+                    <span>Call Now</span>
+                  </a>
+                  <a 
+                    href="#services" 
+                    class="inline-flex items-center gap-2 bg-white text-amber-700 px-4 py-2 lg:px-6 lg:py-3 rounded-xl font-semibold transition-all duration-300 hover:scale-105 hover:shadow-lg"
+                  >
+                    <svg class="w-4 h-4 lg:w-5 lg:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <span>Learn More</span>
+                  </a>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -1200,7 +1184,7 @@
     border-radius: 1rem;
   }
 
-  /* Mobile Optimizations - Fixed */
+  /* Mobile Optimizations - FIXED HERO SECTION */
   @media (max-width: 640px) {
     /* Improve touch targets */
     button, a {
@@ -1213,11 +1197,31 @@
       margin-top: 1rem;
     }
 
-    /* Ensure proper centering */
+    /* Ensure proper centering - CRITICAL FIXES */
     .mobile-center {
       margin-left: auto;
       margin-right: auto;
       text-align: center;
+    }
+
+    /* Hero section mobile fixes */
+    .hero-grid {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    /* Professional Excellence card mobile centering */
+    .feature-card-mobile {
+      max-width: 100%;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .feature-card-mobile .feature-list {
+      text-align: left;
+      margin: 0 auto;
     }
 
     /* Reduce animation intensity on mobile */
@@ -1233,12 +1237,33 @@
     .grid {
       gap: 0.75rem;
     }
+
+    /* Mobile hero section specific fixes */
+    .hero-visual-column {
+      order: -1;
+      margin-bottom: 2rem;
+    }
+
+    .hero-content-column {
+      order: 1;
+    }
   }
 
   /* Tablet Optimizations */
   @media (min-width: 641px) and (max-width: 1024px) {
     .tablet-grid {
       grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  /* Large screen optimizations */
+  @media (min-width: 1024px) {
+    .hero-visual-column {
+      order: 1;
+    }
+
+    .hero-content-column {
+      order: 0;
     }
   }
 
@@ -1332,6 +1357,46 @@
     .safe-area-padding {
       padding-left: max(1rem, env(safe-area-inset-left));
       padding-right: max(1rem, env(safe-area-inset-right));
+    }
+  }
+
+  /* CRITICAL: Hero section mobile layout fixes */
+  @media (max-width: 1023px) {
+    /* Force proper column ordering and centering */
+    .hero-section-grid {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .hero-section-grid > .hero-content-column {
+      order: 2;
+      width: 100%;
+      max-width: none;
+    }
+
+    .hero-section-grid > .hero-visual-column {
+      order: 1;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      margin-bottom: 2rem;
+    }
+
+    /* Professional Excellence card mobile specific */
+    .professional-card {
+      width: 100%;
+      max-width: 420px;
+      margin: 0 auto;
+    }
+
+    .professional-card .feature-items {
+      text-align: left;
+    }
+
+    .professional-card .trust-grid {
+      text-align: center;
     }
   }
 </style>
